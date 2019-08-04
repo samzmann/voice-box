@@ -8,12 +8,13 @@ const recordAudio = () =>
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       const mediaRecorder = new MediaRecorder(stream)
-      let audioChunks: Array<any> = []
+      let audioChunks: Array<Blob> = []
 
       mediaRecorder.addEventListener(
         'dataavailable',
         // @ts-ignore
         (event: { data: Blob }) => {
+          console.log('event', event)
           audioChunks.push(event.data)
         }
       )
@@ -53,6 +54,7 @@ const Record: React.FC<RecordPageProps> = () => {
   const [recorder, setRecorder] = useState()
   const [isRecording, setIsRecording] = useState(false)
   const [audio, setAudio] = useState(null)
+  const [duration, setDuration] = useState(0)
 
   useEffect(() => {
     const initializeRecorder = async () => {
@@ -70,9 +72,20 @@ const Record: React.FC<RecordPageProps> = () => {
     } else {
       setIsRecording(true)
       setAudio(null)
+      setDuration(0)
       recorder.start()
     }
   }
+
+  useEffect(() => {
+    let interval: number
+    if (isRecording) {
+      interval = setInterval(() => {
+        setDuration(duration => duration + 1)
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [isRecording, duration])
 
   const playRecording = () => {
     if (audio && audio.play) {
@@ -96,6 +109,7 @@ const Record: React.FC<RecordPageProps> = () => {
       <button onClick={saveRecording} disabled={isRecording}>
         Save recording
       </button>
+      <div>{duration}</div>
     </div>
   )
 }
