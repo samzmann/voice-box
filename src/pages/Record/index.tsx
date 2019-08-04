@@ -53,7 +53,9 @@ const Record: React.FC<RecordPageProps> = () => {
     console.log('audio', audio)
     const file: Blob = audio.audioBlob
     const path = `recordings/${firestoreAutoId()}`
-    const metadata = {}
+    const metadata = {
+      contentType: 'audio/mpeg-3',
+    }
 
     const uploadTask = firebase.storage
       .ref()
