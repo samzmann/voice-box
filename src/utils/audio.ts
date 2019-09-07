@@ -59,7 +59,8 @@ export const encodeAudioToMp3 = (audioUrl: URL) => {
 }
 
 /**
- * Also check:
+ * MP3 encoding with ffmpeg not working.
+ * Check:
  *  - https://github.com/electron/electron/issues/7300
  *  - https://medium.com/google-developers/make-audio-recordings-with-actions-on-google-3094158c2a2d
  *  - https://github.com/googlearchive/dialogflow-audio-recorder-nodejs/blob/master/public/javascript/audiodemo.js

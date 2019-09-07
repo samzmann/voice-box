@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from '@reach/router'
 import firebase from '../../firebase'
 import { firestoreAutoId } from '../../utils/ids'
-import { encodeAudioToMp3, recordAudio } from '../../utils/audio'
+import { recordAudio } from '../../utils/audio'
 
 interface RecordPageProps extends RouteComponentProps {}
 
@@ -64,12 +64,21 @@ const Record: React.FC<RecordPageProps> = () => {
       .ref()
       .child(path)
       .put(file)
-      .then(snapshot => {
-        console.log('Uploaded:', snapshot)
-      })
-      .catch(error => {
-        console.log('Storage upload error:', error)
-      })
+
+    uploadTask.on(
+      'state_changed',
+      snapshot => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        console.log(`Upload progress: ${progress}%`)
+      },
+      error => {
+        console.log('Upload error:', error)
+      },
+      async () => {
+        const uploadURL = await uploadTask.snapshot.ref.getDownloadURL()
+        console.log('uploadURL', uploadURL)
+      }
+    )
   }
 
   return (
