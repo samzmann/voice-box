@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps } from '@reach/router'
 import firebase from '../../firebase'
+import { getMessageByShortId } from '../../utils/database'
 
 interface MessagePageProps extends RouteComponentProps {
-  messageId?: string
+  shortId?: string
 }
 
-const Message: React.FC<MessagePageProps> = ({ messageId }) => {
+const Message: React.FC<MessagePageProps> = ({ shortId }) => {
   const [loading, setLoading] = useState(false)
-  const [messageURL, setMessageURL] = useState(null)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     const getMessageURL = async () => {
       setLoading(true)
       try {
-        if (messageId) {
-          const msgURL = await firebase.storage
-            .ref()
-            .child(`recordings/${messageId}`)
-            .getDownloadURL()
-          console.log(msgURL)
-
-          setMessageURL(msgURL)
+        if (shortId) {
+          const msg = await getMessageByShortId(shortId)
+          console.log('message', msg)
+          setMessage(msg)
           setLoading(false)
         }
       } catch (error) {
@@ -31,14 +28,14 @@ const Message: React.FC<MessagePageProps> = ({ messageId }) => {
     }
 
     getMessageURL()
-  }, [messageId])
+  }, [shortId])
 
   return (
     <div>
       <h1>Message Page</h1>
-      <div>Message id: {messageId}</div>
+      <div>Message id: {shortId}</div>
       {loading && <div>Loading...</div>}
-      {messageURL && <audio controls src={messageURL} />}
+      {message && <audio controls src={message.downloadURL} />}
     </div>
   )
 }

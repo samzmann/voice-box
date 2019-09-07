@@ -14,7 +14,7 @@ const App: React.FC = () => {
       <Router>
         <Home path="/" />
         <Record path="/record" />
-        <Message path="/:messageId" />
+        <Message path="/:shortId" />
       </Router>
     </div>
   )

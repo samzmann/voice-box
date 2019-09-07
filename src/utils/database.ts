@@ -14,3 +14,19 @@ export const createMessage = async (message: MessageDocument) => {
     console.log('Error creating message document:', error)
   }
 }
+
+export const getMessageByShortId = async (shortId: string) => {
+  try {
+    const querySnapshot = await firebase.db
+      .collection('messages')
+      .where('shortId', '==', shortId)
+      .get()
+
+    if (querySnapshot.docs.length) {
+      return querySnapshot.docs[0].data()
+    }
+    throw new Error('No message found for this id.')
+  } catch (error) {
+    console.log('Error fetching message document:', error)
+  }
+}
