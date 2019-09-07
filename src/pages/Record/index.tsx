@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from '@reach/router'
 import firebase from '../../firebase'
-import { firestoreAutoId } from '../../utils/ids'
+import { firestoreAutoId, shortId } from '../../utils/ids'
 import { recordAudio } from '../../utils/audio'
+import { createMessage } from '../../utils/database'
 
 interface RecordPageProps extends RouteComponentProps {}
 
@@ -50,35 +51,41 @@ const Record: React.FC<RecordPageProps> = () => {
   }
 
   const saveRecording = async () => {
-    console.log('audio', audio)
+    try {
+      const file: Blob = audio.audioBlob
+      const path = `recordings/${firestoreAutoId()}`
+      // const metadata = {
+      //   contentType: 'audio/mpeg-3',
+      // }
 
-    // await encodeAudioToMp3(audio.audioUrl)
+      const uploadTask = firebase.storage
+        .ref()
+        .child(path)
+        .put(file)
 
-    const file: Blob = audio.audioBlob
-    const path = `recordings/${firestoreAutoId()}`
-    // const metadata = {
-    //   contentType: 'audio/mpeg-3',
-    // }
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          console.log(`Upload progress: ${progress}%`)
+        },
+        error => {
+          console.log('Upload error:', error)
+        },
+        async () => {
+          const downloadURL = await uploadTask.snapshot.ref.getDownloadURL()
+          console.log('downloadURL', downloadURL)
 
-    const uploadTask = firebase.storage
-      .ref()
-      .child(path)
-      .put(file)
-
-    uploadTask.on(
-      'state_changed',
-      snapshot => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        console.log(`Upload progress: ${progress}%`)
-      },
-      error => {
-        console.log('Upload error:', error)
-      },
-      async () => {
-        const uploadURL = await uploadTask.snapshot.ref.getDownloadURL()
-        console.log('uploadURL', uploadURL)
-      }
-    )
+          await createMessage({
+            shortId: shortId(),
+            downloadURL,
+          })
+        }
+      )
+    } catch (error) {
+      console.log('Error saving message:', error)
+    }
   }
 
   return (

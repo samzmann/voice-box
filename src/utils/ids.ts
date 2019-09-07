@@ -5,6 +5,8 @@
 const AUTO_ID_CHARS =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
+const SHORT_ID_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789'
+
 export const firestoreAutoId = (): string => {
   let autoId = ''
 
@@ -14,4 +16,17 @@ export const firestoreAutoId = (): string => {
     )
   }
   return autoId
+}
+
+export const shortId = (): string => {
+  let id = ''
+
+  const length = 5
+
+  for (let i = 0; i < length; i++) {
+    id += SHORT_ID_CHARS.charAt(
+      Math.floor(Math.random() * SHORT_ID_CHARS.length)
+    )
+  }
+  return id
 }
