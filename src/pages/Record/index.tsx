@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from '@reach/router'
 import firebase from '../../firebase'
 import { firestoreAutoId } from '../../utils/ids'
-import { recordAudio } from '../../utils/audio'
+import { encodeAudioToMp3, recordAudio } from '../../utils/audio'
 
 interface RecordPageProps extends RouteComponentProps {}
 
@@ -49,20 +49,26 @@ const Record: React.FC<RecordPageProps> = () => {
     }
   }
 
-  const saveRecording = () => {
+  const saveRecording = async () => {
     console.log('audio', audio)
+
+    // await encodeAudioToMp3(audio.audioUrl)
+
     const file: Blob = audio.audioBlob
     const path = `recordings/${firestoreAutoId()}`
-    const metadata = {
-      contentType: 'audio/mpeg-3',
-    }
+    // const metadata = {
+    //   contentType: 'audio/mpeg-3',
+    // }
 
     const uploadTask = firebase.storage
       .ref()
       .child(path)
-      .put(file, metadata)
+      .put(file)
       .then(snapshot => {
         console.log('Uploaded:', snapshot)
+      })
+      .catch(error => {
+        console.log('Storage upload error:', error)
       })
   }
 

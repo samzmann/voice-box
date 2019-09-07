@@ -23,7 +23,7 @@ export const recordAudio = () =>
       const stop = () =>
         new Promise(resolve => {
           mediaRecorder.addEventListener('stop', () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg-3' })
+            const audioBlob = new Blob(audioChunks)
             const audioUrl = URL.createObjectURL(audioBlob)
             const audio = new Audio(audioUrl)
 
@@ -43,3 +43,24 @@ export const recordAudio = () =>
       reject(error)
     }
   })
+
+// partly taken from https://medium.com/jeremy-gottfrieds-tech-blog/javascript-tutorial-record-audio-and-encode-it-to-mp3-2eedcd466e78
+export const encodeAudioToMp3 = (audioUrl: URL) => {
+  console.log('encodeAudioToMp3 input:', audioUrl)
+  // try {
+  //   const process = new ffmpeg(audioUrl)
+  //   console.log('process', process)
+  //   process.then((audio: any) => {
+  //     console.log(audio)
+  //   })
+  // } catch (error) {
+  //   console.log('error in encodeAudioToMp3', error)
+  // }
+}
+
+/**
+ * Also check:
+ *  - https://github.com/electron/electron/issues/7300
+ *  - https://medium.com/google-developers/make-audio-recordings-with-actions-on-google-3094158c2a2d
+ *  - https://github.com/googlearchive/dialogflow-audio-recorder-nodejs/blob/master/public/javascript/audiodemo.js
+ * */
