@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps } from '@reach/router'
-import firebase from '../../firebase'
 import { getMessageByShortId } from '../../utils/database'
 
 interface MessagePageProps extends RouteComponentProps {

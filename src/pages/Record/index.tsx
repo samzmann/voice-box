@@ -5,6 +5,13 @@ import { firestoreAutoId, shortId } from '../../utils/ids'
 import { recordAudio } from '../../utils/audio'
 import { createMessage } from '../../utils/database'
 
+enum UPLOAD_STATUS {
+  WAITING,
+  UPLOADING,
+  COMPLETE,
+  ERROR,
+}
+
 interface RecordPageProps extends RouteComponentProps {}
 
 const Record: React.FC<RecordPageProps> = () => {
@@ -12,6 +19,8 @@ const Record: React.FC<RecordPageProps> = () => {
   const [isRecording, setIsRecording] = useState(false)
   const [audio, setAudio] = useState(null)
   const [duration, setDuration] = useState(0)
+  const [uploadStatus, setUploadStatus] = useState(UPLOAD_STATUS.WAITING)
+  const [messageShortId, setMessageShortId] = useState(null)
 
   useEffect(() => {
     const initializeRecorder = async () => {
@@ -52,6 +61,8 @@ const Record: React.FC<RecordPageProps> = () => {
 
   const saveRecording = async () => {
     try {
+      setUploadStatus(UPLOAD_STATUS.UPLOADING)
+
       const file: Blob = audio.audioBlob
       const path = `recordings/${firestoreAutoId()}`
       // const metadata = {
@@ -72,15 +83,20 @@ const Record: React.FC<RecordPageProps> = () => {
         },
         error => {
           console.log('Upload error:', error)
+          setUploadStatus(UPLOAD_STATUS.ERROR)
         },
         async () => {
           const downloadURL = await uploadTask.snapshot.ref.getDownloadURL()
-          console.log('downloadURL', downloadURL)
+
+          const newShortId = shortId()
 
           await createMessage({
-            shortId: shortId(),
+            shortId: newShortId,
             downloadURL,
           })
+
+          setMessageShortId(newShortId)
+          setUploadStatus(UPLOAD_STATUS.COMPLETE)
         }
       )
     } catch (error) {
@@ -101,6 +117,9 @@ const Record: React.FC<RecordPageProps> = () => {
         Save recording
       </button>
       <div>{duration}</div>
+      {uploadStatus === UPLOAD_STATUS.COMPLETE && (
+        <div>Share your message with this id: {messageShortId}</div>
+      )}
     </div>
   )
 }
