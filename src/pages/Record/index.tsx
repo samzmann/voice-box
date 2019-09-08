@@ -4,6 +4,7 @@ import firebase from '../../firebase'
 import { firestoreAutoId, shortId } from '../../utils/ids'
 import { recordAudio } from '../../utils/audio'
 import { createMessage } from '../../utils/database'
+import Loading from '../../components/Loading'
 
 enum UPLOAD_STATUS {
   WAITING,
@@ -117,6 +118,7 @@ const Record: React.FC<RecordPageProps> = () => {
         Save recording
       </button>
       <div>{duration}</div>
+      {uploadStatus === UPLOAD_STATUS.UPLOADING && <Loading />}
       {uploadStatus === UPLOAD_STATUS.COMPLETE && (
         <div>Share your message with this id: {messageShortId}</div>
       )}

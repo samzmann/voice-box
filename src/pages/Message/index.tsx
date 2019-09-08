@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps } from '@reach/router'
 import { getMessageByShortId } from '../../utils/database'
+import Loading from '../../components/Loading'
 
 interface MessagePageProps extends RouteComponentProps {
   shortId?: string
@@ -33,7 +34,7 @@ const Message: React.FC<MessagePageProps> = ({ shortId }) => {
     <div>
       <h1>Message Page</h1>
       <div>Message id: {shortId}</div>
-      {loading && <div>Loading...</div>}
+      {loading && <Loading />}
       {message && <audio controls src={message.downloadURL} />}
     </div>
   )
