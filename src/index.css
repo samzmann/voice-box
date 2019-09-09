@@ -1,12 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,600&display=swap');
+
 body {
   margin: 0;
-  background-color: #141414;
-  color: #FCFBF9;
+  background-color: #143035;
+  color: #C3E0DF;
+  font-family: 'IBM Plex Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   text-decoration: none;
-  color: #FCFBF9;
+  color: #C3E0DF;
 }
