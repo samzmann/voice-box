@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
 import { color } from '../../constants/color'
@@ -62,13 +62,53 @@ const BottomLine = styled.div`
 `
 
 const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
-  console.log(message)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audio = useRef(null)
+
+  const toggleAudio = () => (isPlaying ? pause() : play())
+
+  const play = async () => {
+    if (audio.current) {
+      await audio.current.play()
+      setIsPlaying(true)
+    }
+  }
+
+  const pause = async () => {
+    if (audio.current) {
+      await audio.current.pause()
+      setIsPlaying(false)
+    }
+  }
+
+  const audioEventListener = () => {
+    if (audio.current) {
+      audio.current.addEventListener('ended', () => {
+        console.log('audio ended')
+        setIsPlaying(false)
+      })
+    }
+  }
+
   return (
     <Container>
-      <SoundWave />
+      <SoundWave>
+        <audio
+          ref={ref => {
+            if (!audio.current) {
+              audio.current = ref
+              audioEventListener()
+            }
+          }}
+          controls
+          src={message.downloadURL}
+        />
+      </SoundWave>
       <Bottom>
         <CodeText>{message.shortId}</CodeText>
-        <PlayButton>play</PlayButton>
+        <PlayButton onClick={toggleAudio}>
+          {isPlaying ? 'pause' : 'play'}
+        </PlayButton>
       </Bottom>
       <BottomLine />
     </Container>
