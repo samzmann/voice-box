@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { colors } from '../../../constants/colors'
+import { color } from '../../../constants/color'
 
 const Container = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ const Container = styled.div`
   justify-content: center;
   width: 250px;
   height: 100px;
-  background-color: ${colors.Red};
+  background-color: ${color.Red};
   border-radius: 15px;
   border: none;
   box-shadow: 0px 2px 0px black;
@@ -24,7 +24,7 @@ const Circle = styled.div`
   height: 70px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background-color: ${colors.Black};
+  background-color: ${color.Black};
 `
 
 const LargeRecordButton: React.FC = () => {

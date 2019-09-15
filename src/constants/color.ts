@@ -1,4 +1,4 @@
-export enum colors {
+export enum color {
   Black = '#141414',
   DarkGrey = '#143035',
   Grey = '#435F66',
