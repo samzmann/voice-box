@@ -86,6 +86,14 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
         console.log('audio ended')
         setIsPlaying(false)
       })
+
+      audio.current.addEventListener('timeupdate', () => {
+        console.log(
+          Math.floor(
+            (audio.current.currentTime / audio.current.duration) * 100
+          ) + '%'
+        )
+      })
     }
   }
 
