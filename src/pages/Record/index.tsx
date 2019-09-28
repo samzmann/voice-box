@@ -66,14 +66,14 @@ const Record: React.FC<RecordPageProps> = () => {
 
       const file: Blob = audio.audioBlob
       const path = `recordings/${firestoreAutoId()}`
-      // const metadata = {
-      //   contentType: 'audio/mpeg-3',
-      // }
+      const metadata = {
+        contentType: file.type,
+      }
 
       const uploadTask = firebase.storage
         .ref()
         .child(path)
-        .put(file)
+        .put(file, metadata)
 
       uploadTask.on(
         'state_changed',
@@ -89,11 +89,14 @@ const Record: React.FC<RecordPageProps> = () => {
         async () => {
           const downloadURL = await uploadTask.snapshot.ref.getDownloadURL()
 
+          console.log(uploadTask.snapshot.ref)
+
           const newShortId = shortId()
 
           await createMessage({
             shortId: newShortId,
             downloadURL,
+            storageFullPath: uploadTask.snapshot.ref.fullPath,
           })
 
           setMessageShortId(newShortId)

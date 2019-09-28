@@ -6,11 +6,14 @@ export const recordAudio = () =>
       const mediaRecorder = new MediaRecorder(stream)
       let audioChunks: Array<Blob> = []
 
+      let contentType = '' // will hold the MIME type
+
       mediaRecorder.addEventListener(
         'dataavailable',
         // @ts-ignore
         (event: { data: Blob }) => {
           console.log('event', event)
+          contentType = event.data.type
           audioChunks.push(event.data)
         }
       )
@@ -23,7 +26,7 @@ export const recordAudio = () =>
       const stop = () =>
         new Promise(resolve => {
           mediaRecorder.addEventListener('stop', () => {
-            const audioBlob = new Blob(audioChunks)
+            const audioBlob = new Blob(audioChunks, { type: contentType })
             const audioUrl = URL.createObjectURL(audioBlob)
             const audio = new Audio(audioUrl)
 

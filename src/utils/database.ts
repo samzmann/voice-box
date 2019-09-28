@@ -1,8 +1,9 @@
 import firebase from '../firebase'
 
-interface MessageDocument {
+export interface MessageDocument {
   shortId: string
   downloadURL: string
+  storageFullPath: string
   // owner: string // TODO: add id of message owner
 }
 
