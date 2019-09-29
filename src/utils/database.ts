@@ -17,21 +17,24 @@ export const createMessage = async (message: MessageDocument) => {
   }
 }
 
-export const getMessageByShortId = async (shortId: string) => {
-  try {
-    const querySnapshot = await firebase.db
-      .collection('messages')
-      .where('shortId', '==', shortId)
-      .get()
+export const getMessageByShortId = async (shortId: string) =>
+  new Promise<any>(async (resolve, reject) => {
+    try {
+      const querySnapshot = await firebase.db
+        .collection('messages')
+        .where('shortId', '==', shortId)
+        .get()
 
-    if (querySnapshot.docs.length) {
-      return querySnapshot.docs[0].data()
+      if (querySnapshot.docs.length) {
+        resolve(querySnapshot.docs[0].data())
+      }
+
+      throw new Error('No message found for this id.')
+    } catch (error) {
+      console.log('Error fetching message document:', error)
+      reject(error)
     }
-    throw new Error('No message found for this id.')
-  } catch (error) {
-    console.log('Error fetching message document:', error)
-  }
-}
+  })
 
 export const getMessages = () =>
   new Promise<any[]>(async (resolve, reject) => {

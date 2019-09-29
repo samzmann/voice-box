@@ -8,8 +8,9 @@ interface MessagePageProps extends RouteComponentProps {
 }
 
 const Message: React.FC<MessagePageProps> = ({ shortId }) => {
-  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const getMessageURL = async () => {
@@ -24,6 +25,7 @@ const Message: React.FC<MessagePageProps> = ({ shortId }) => {
       } catch (error) {
         console.log(error)
         setLoading(false)
+        setError('Something went wrong, please reload the page.')
       }
     }
 
@@ -36,6 +38,7 @@ const Message: React.FC<MessagePageProps> = ({ shortId }) => {
       <div>Message id: {shortId}</div>
       {loading && <Loading />}
       {message && <audio controls src={message.downloadURL} />}
+      {error && <div>{error}</div>}
     </div>
   )
 }
