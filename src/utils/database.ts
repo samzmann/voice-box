@@ -33,16 +33,18 @@ export const getMessageByShortId = async (shortId: string) => {
   }
 }
 
-export const getMessages = async () => {
-  try {
-    const querySnapshot = await firebase.db.collection('messages').get()
+export const getMessages = () =>
+  new Promise<any[]>(async (resolve, reject) => {
+    try {
+      const querySnapshot = await firebase.db.collection('messages').get()
 
-    if (querySnapshot.docs.length) {
-      return querySnapshot.docs.map(message => message.data())
+      if (querySnapshot.docs.length) {
+        resolve(querySnapshot.docs.map(message => message.data()))
+      }
+
+      throw new Error('No messages found.')
+    } catch (error) {
+      console.log('Error fetching messages:', error)
+      reject(error)
     }
-
-    throw new Error('No messages found.')
-  } catch (error) {
-    console.log('Error fetching messages:', error)
-  }
-}
+  })
