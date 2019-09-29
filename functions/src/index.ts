@@ -104,7 +104,8 @@ exports.encodeAudioToMP3 = functions.firestore
         isAudioProcessing: admin.firestore.FieldValue.delete(),
       })
 
-    // TODO: delete the old audio file
+    // Delete the old audio file
+    await object.delete()
 
     return true
   })
