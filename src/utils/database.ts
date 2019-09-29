@@ -3,7 +3,8 @@ import firebase from '../firebase'
 export interface MessageDocument {
   shortId: string
   downloadURL: string
-  storageFullPath: string
+  storageFullPath?: string
+  isAudioProcessing?: boolean
   // owner: string // TODO: add id of message owner
 }
 

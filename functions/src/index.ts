@@ -23,11 +23,8 @@ exports.encodeAudioToMP3 = functions.firestore
     console.log('message:', message)
 
     // Get storage object
-    const object = admin
-      .storage()
-      .bucket()
-      .file(message.storageFullPath)
-
+    const bucket = admin.storage().bucket()
+    const object = bucket.file(message.storageFullPath)
     const filePath = object.name
 
     // TODO: get the contentType so we can check if the file is actually audio
@@ -68,8 +65,7 @@ exports.encodeAudioToMP3 = functions.firestore
 
     await object.download({ destination: tempFilePath })
 
-    console.log('Audio downloaded to', tempFilePath)
-
+    // Convert the audio to mp3
     const command = ffmpeg(tempFilePath)
       .setFfmpegPath(ffmpeg_static.path)
       .format('mp3')
@@ -77,18 +73,38 @@ exports.encodeAudioToMP3 = functions.firestore
 
     await promisifyCommand(command)
 
-    const uploadedMP3 = await admin
-      .storage()
-      .bucket()
-      .upload(targetTempFilePath, {
-        destination: targetStorageFilePath,
-      })
-
-    console.log('uploadedMP3', uploadedMP3)
+    const uploadedMP3 = await bucket.upload(targetTempFilePath, {
+      destination: targetStorageFilePath,
+    })
 
     // Delete the local files once audio has been uploaded
     fs.unlinkSync(tempFilePath)
     fs.unlinkSync(targetTempFilePath)
+
+    const uploadedFile = uploadedMP3[0]
+    console.log('uploadedFile', uploadedFile)
+
+    // Get a read URL for the new file.
+    // We must specify an expiry date, so we set one far in the future.
+    const urls = await uploadedFile.getSignedUrl({
+      action: 'read',
+      expires: '03-09-2491',
+    })
+
+    // Update the database document:
+    //  - update download url
+    //  - remove storageFullPath field
+    await admin
+      .firestore()
+      .collection('messages')
+      .doc(context.params.messageId)
+      .update({
+        downloadURL: urls[0],
+        storageFullPath: admin.firestore.FieldValue.delete(),
+        isAudioProcessing: admin.firestore.FieldValue.delete(),
+      })
+
+    // TODO: delete the old audio file
 
     return true
   })
