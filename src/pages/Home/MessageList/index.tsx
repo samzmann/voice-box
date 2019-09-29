@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import MessageCard from '../../../components/MessageCard'
+import { MessageDocument } from '../../../utils/database'
 
 interface MessageListProps {
-  messages: Array<any> // TODO: replace with correct message type, and handle empty array
+  messages: MessageDocument[]
 }
 
 const Container = styled.div``
