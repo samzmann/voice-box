@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
+import { Link } from '@reach/router'
 import { padding } from '../../constants/padding'
 import { color } from '../../constants/color'
 import { MessageDocument } from '../../utils/database'
@@ -27,7 +28,7 @@ const Bottom = styled.div`
   justify-content: space-between;
 `
 
-const CodeText = styled.div`
+const CodeLink = styled(Link)`
   font-size: 23px;
 
   &:hover {
@@ -113,7 +114,7 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
         />
       </SoundWave>
       <Bottom>
-        <CodeText>{message.shortId}</CodeText>
+        <CodeLink to={`/${message.shortId}`}>{message.shortId}</CodeLink>
         <PlayButton onClick={toggleAudio}>
           {isPlaying ? 'pause' : 'play'}
         </PlayButton>
