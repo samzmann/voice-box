@@ -26,7 +26,7 @@ export const getMessageByShortId = async (shortId: string) =>
         .get()
 
       if (querySnapshot.docs.length) {
-        resolve(querySnapshot.docs[0].data())
+        return resolve(querySnapshot.docs[0].data())
       }
 
       throw new Error('No message found for this id.')
