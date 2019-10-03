@@ -8,9 +8,9 @@
 const unit = 8
 
 export enum padding {
-  xs = 0.5 * unit,
-  s = unit,
-  m = 2 * unit,
-  l = 4 * unit,
-  xl = 8 * unit,
+  xs = 0.5 * unit, // 4
+  s = unit, // 8
+  m = 2 * unit, // 16
+  l = 4 * unit, // 32
+  xl = 8 * unit, // 64
 }

@@ -2,9 +2,10 @@ import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
 import { color } from '../../constants/color'
+import { MessageDocument } from '../../utils/database'
 
 interface MessageCardProps {
-  message: any
+  message: MessageDocument
 }
 
 const Container = styled.div`

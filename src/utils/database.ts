@@ -42,7 +42,7 @@ export const getMessages = () =>
       const querySnapshot = await firebase.db.collection('messages').get()
 
       if (querySnapshot.docs.length) {
-        resolve(querySnapshot.docs.map(message => message.data()))
+        return resolve(querySnapshot.docs.map(message => message.data()))
       }
 
       throw new Error('No messages found.')
