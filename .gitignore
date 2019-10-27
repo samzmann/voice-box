@@ -65,3 +65,9 @@ typings/
 
 # .DS_Store
 **/.DS_Store
+
+# React generated build
+build
+
+# Firebase hosting cache
+.firebase
