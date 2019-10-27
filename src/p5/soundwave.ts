@@ -56,7 +56,12 @@ const soundwave = (p: any) => {
     }
 
     // if (!audioInitialized) {
-    //   audio = p.loadSound(newProps.audio.src)
+    //   // audio = p.loadSound(newProps.audio.src)
+    //   audio = p.loadSound(
+    //     newProps.audio.src,
+    //     () => console.log('loadSound: success'),
+    //     (e: any) => console.log('loadSound: error', e)
+    //   )
     //   console.log('audio', audio)
     // }
   }
