@@ -12,15 +12,7 @@ const SoundWave: React.FC<SoundWaveProps> = ({ audio }) => {
   const canvasHolderRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div
-      style={{
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: 'yellow',
-        height: 50,
-      }}
-      ref={canvasHolderRef}
-    >
+    <div style={{ height: 50 }} ref={canvasHolderRef}>
       <P5Wrapper
         sketch={soundwave}
         // audio={audio}

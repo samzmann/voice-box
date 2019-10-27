@@ -1,66 +1,38 @@
 import 'p5/lib/addons/p5.sound'
+import { color } from '../constants/color'
 
 const soundwave = (p: any) => {
   let canvas
   let canvasInitialized = false
+  let parentDivRef: HTMLDivElement = null
 
   let audio
   let audioInitialized = false
 
-  let parentDivRef: HTMLDivElement = null
-  let parentDivRefInitialized = false
-
   p.setup = () => {
     // canvas = p.createCanvas(canvasConfig.width, canvasConfig.height)
     canvas = p.createCanvas(0, 0)
-    p.background(0, 0, 0, 0)
+    p.background(color.DarkGrey)
     p.frameRate(0.1)
   }
 
   p.draw = () => {
-    p.fill(255, 255, 255)
+    p.background(color.DarkGrey)
+    p.fill(color.LightGrey)
     p.noStroke()
 
-    // const rectWidth = 40
-    // const gutterWidth = 20
-    // const availableWidth = p.width - 2 * gutterWidth
-    //
-    // console.log({ width: p.width, availableWidth })
-    //
-    // for (
-    //   let i = gutterWidth;
-    //   i < availableWidth - gutterWidth;
-    //   i = i + rectWidth + gutterWidth
-    // ) {
-    //   p.rect(i, 0, rectWidth, p.height)
-    // }
-
-    const w = p.width
-    const h = p.height
-
-    const rS = 50
-
-    const gutterW = 10
-
-    const possibleRects = p.floor(w / (rS + gutterW))
-
-    const numRects = 3
-    const initialPosX = (w / 2 - rS / 2) / numRects
-
-    const actualGutter = (w - numRects * rS) / (numRects + 1)
-
-    console.log({ width: p.width, numRects, initialPosX, actualGutter })
+    const barWidth = 5
+    const gutterWidth = 2
+    const numRects = p.floor(p.width / (barWidth + gutterWidth))
+    const actualGutter = (p.width - numRects * barWidth) / (numRects + 1)
 
     for (let i = 0; i < numRects; i++) {
-      const posX = actualGutter + i * (rS + actualGutter)
-      console.log('posX', posX)
-      const posY = 0
-      p.rect(posX, posY, rS, rS)
+      const posX = actualGutter + i * (barWidth + actualGutter)
+      const posY = p.height
+      const randHeight = p.random(0, p.height)
+      const barHeight = -(posY - (posY - randHeight))
+      p.rect(posX, posY, barWidth, barHeight)
     }
-
-    p.noFill()
-    p.stroke(255, 0, 0)
-    p.rect(0, 0, p.width, p.height)
   }
 
   p.windowResized = () => {
