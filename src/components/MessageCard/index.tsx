@@ -4,6 +4,8 @@ import { Link } from '@reach/router'
 import { padding } from '../../constants/padding'
 import { color } from '../../constants/color'
 import { MessageDocument } from '../../utils/database'
+import ProgressBar from '../ProgressBar'
+import SoundWave from '../SoundWave'
 
 interface MessageCardProps {
   message: MessageDocument
@@ -14,13 +16,13 @@ const Container = styled.div`
   margin-bottom: ${padding.m}px;
 `
 
-const SoundWave = styled.div`
-  height: 88px;
-  border-style: dashed;
-  border-width: 1px;
-  border-color: ${color.LightGrey};
-  margin-bottom: ${padding.s}px;
-`
+// const SoundWave = styled.div`
+//   height: 88px;
+//   border-style: dashed;
+//   border-width: 1px;
+//   border-color: ${color.LightGrey};
+//   margin-bottom: ${padding.s}px;
+// `
 
 const Bottom = styled.div`
   flex-direction: row;
@@ -64,7 +66,9 @@ const BottomLine = styled.div`
 
 const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isAudioInitialized, setIsAudioInitialized] = useState(false)
   const audio = useRef(null)
+  const progressBarRef = useRef(null)
 
   const toggleAudio = () => (isPlaying ? pause() : play())
 
@@ -90,29 +94,36 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
       })
 
       audio.current.addEventListener('timeupdate', () => {
-        console.log(
-          Math.floor(
-            (audio.current.currentTime / audio.current.duration) * 100
-          ) + '%'
+        const progressPercent = Math.floor(
+          (audio.current.currentTime / audio.current.duration) * 100
         )
+
+        if (progressBarRef.current) {
+          progressBarRef.current.style.width = progressPercent + '%'
+        }
       })
     }
   }
 
   return (
     <Container>
-      <SoundWave>
-        <audio
-          ref={ref => {
-            if (!audio.current) {
-              audio.current = ref
-              audioEventListener()
-            }
-          }}
-          controls
-          src={message.downloadURL}
-        />
-      </SoundWave>
+      <audio
+        ref={ref => {
+          if (!audio.current) {
+            audio.current = ref
+            audioEventListener()
+            setIsAudioInitialized(true)
+          }
+        }}
+        // controls
+        src={message.downloadURL}
+      />
+      <ProgressBar
+        innerRef={ref => {
+          progressBarRef.current = ref
+        }}
+      />
+      {isAudioInitialized && <SoundWave audio={audio.current} />}
       <Bottom>
         <CodeLink to={`/${message.shortId}`}>{message.shortId}</CodeLink>
         <PlayButton onClick={toggleAudio}>
