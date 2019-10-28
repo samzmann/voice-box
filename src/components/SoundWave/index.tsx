@@ -5,17 +5,20 @@ import P5Wrapper from 'react-p5-wrapper'
 import soundwave from '../../p5/soundwave'
 
 interface SoundWaveProps {
-  audio: HTMLAudioElement
+  audio?: HTMLAudioElement
 }
 
 const SoundWave: React.FC<SoundWaveProps> = ({ audio }) => {
   const canvasHolderRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div style={{ height: 50 }} ref={canvasHolderRef}>
+    <div
+      style={{ height: 50, border: '1px solid yellow' }}
+      ref={canvasHolderRef}
+    >
       <P5Wrapper
         sketch={soundwave}
-        // audio={audio}
+        audio={audio}
         parentDivRef={canvasHolderRef}
       />
     </div>
