@@ -5,7 +5,7 @@ import { firestoreAutoId, shortId } from '../../utils/ids'
 import { recordAudio } from '../../utils/audio'
 import { createMessage } from '../../utils/database'
 import Loading from '../../components/Loading'
-import SoundWave from '../../components/SoundWave'
+import MicInputSpectrum from '../../components/MicInputSpectrum'
 
 enum UPLOAD_STATUS {
   WAITING,
@@ -113,7 +113,7 @@ const Record: React.FC<RecordPageProps> = () => {
   return (
     <div>
       <h1>Record Page</h1>
-      <SoundWave />
+      <MicInputSpectrum />
       <button onClick={handleRecord}>
         {isRecording ? 'Stop' : 'Start'} recording
       </button>

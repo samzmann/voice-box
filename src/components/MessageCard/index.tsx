@@ -16,14 +16,6 @@ const Container = styled.div`
   margin-bottom: ${padding.m}px;
 `
 
-// const SoundWave = styled.div`
-//   height: 88px;
-//   border-style: dashed;
-//   border-width: 1px;
-//   border-color: ${color.LightGrey};
-//   margin-bottom: ${padding.s}px;
-// `
-
 const Bottom = styled.div`
   flex-direction: row;
   align-items: center;
@@ -123,7 +115,7 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
           progressBarRef.current = ref
         }}
       />
-      {isAudioInitialized && <SoundWave audio={audio.current} />}
+      {isAudioInitialized && <SoundWave />}
       <Bottom>
         <CodeLink to={`/${message.shortId}`}>{message.shortId}</CodeLink>
         <PlayButton onClick={toggleAudio}>

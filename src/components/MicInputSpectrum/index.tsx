@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import P5Wrapper from 'react-p5-wrapper'
 import soundwave from '../../p5/soundwave'
 
-const SoundWave: React.FC = () => {
+const MicInputSpectrum: React.FC = () => {
   const canvasHolderRef = useRef<HTMLDivElement>(null)
   return (
     <div
@@ -16,4 +16,4 @@ const SoundWave: React.FC = () => {
   )
 }
 
-export default SoundWave
+export default MicInputSpectrum
