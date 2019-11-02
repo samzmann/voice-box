@@ -16,11 +16,7 @@ const SoundWave: React.FC<SoundWaveProps> = ({ audio }) => {
       style={{ height: 50, border: '1px solid yellow' }}
       ref={canvasHolderRef}
     >
-      <P5Wrapper
-        sketch={soundwave}
-        audio={audio}
-        parentDivRef={canvasHolderRef}
-      />
+      <P5Wrapper sketch={soundwave} parentDivRef={canvasHolderRef} />
     </div>
   )
 }

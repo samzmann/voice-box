@@ -7,22 +7,17 @@ const soundwave = (p: any) => {
   let canvasInitialized = false
   let parentDivRef: HTMLDivElement = null
 
-  let audio: object
-  let audioInitialized = false
-
   let mic
   let fft: p5.FFT
 
   p.setup = () => {
-    // canvas = p.createCanvas(canvasConfig.width, canvasConfig.height)
     canvas = p.createCanvas(0, 0)
     p.background(color.DarkGrey)
-    // p.frameRate(1)
 
     mic = new p5.AudioIn()
     mic.start()
 
-    fft = new p5.FFT()
+    fft = new p5.FFT(0.95)
     fft.setInput(mic)
   }
 
@@ -44,26 +39,23 @@ const soundwave = (p: any) => {
     //   p.rect(posX, posY, barWidth, barHeight)
     // }
 
-    const spectrum = fft.analyze()
-    console.log('spectrum', spectrum)
+    fft.analyze()
+
+    // averages out the values of the 1024 bins returned by fft.analyze()
+    const averagedSpectrum = fft.linAverages(numRects)
 
     for (let i = 0; i < numRects; i++) {
       const posX = actualGutter + i * (barWidth + actualGutter)
-      // const posY = p.height
-      const posY = p.map(spectrum[i], 0, 255, p.height, 0)
-      const randHeight = p.random(0, p.height)
-      const barHeight = -(posY - (posY - randHeight))
-      p.rect(posX, posY, barWidth, posY)
+      const posY = p.height
+      const barHeight = p.map(
+        averagedSpectrum[i],
+        0,
+        255,
+        0.01 * p.height,
+        p.height
+      )
+      p.rect(posX, posY, barWidth, -barHeight)
     }
-
-    // p.stroke(255, 0, 0)
-    //
-    // for (let i = 0; i < numRects; i++) {
-    //   const posX = actualGutter + i * (barWidth + actualGutter)
-    //
-    //   const posY = p.rect(posX, 0, 1, spectrum[i])
-    //   p.ellipse(p.width / 2, p.height / 2, 10, 10)
-    // }
   }
 
   p.windowResized = () => {
@@ -85,16 +77,6 @@ const soundwave = (p: any) => {
         canvasInitialized = true
       }
     }
-
-    // if (!audioInitialized) {
-    //   // audio = p.loadSound(newProps.audio.src)
-    //   audio = p.loadSound(
-    //     newProps.audio.src,
-    //     () => console.log('loadSound: success'),
-    //     (e: any) => console.log('loadSound: error', e)
-    //   )
-    //   console.log('audio', audio)
-    // }
   }
 }
 
