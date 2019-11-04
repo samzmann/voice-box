@@ -17,7 +17,8 @@
     "ffmpeg-static": "^2.6.0",
     "firebase-admin": "^8.0.0",
     "firebase-functions": "^3.1.0",
-    "fluent-ffmpeg": "^2.1.2"
+    "fluent-ffmpeg": "^2.1.2",
+    "waveform-data": "^3.1.0"
   },
   "devDependencies": {
     "@types/ffmpeg-static": "^2.0.0",

@@ -5,6 +5,12 @@ import * as os from 'os'
 import * as fs from 'fs'
 import * as ffmpeg from 'fluent-ffmpeg'
 import * as ffmpeg_static from 'ffmpeg-static'
+// @ts-ignore
+import * as waveform from 'waveform-data'
+
+// TODO: look into:
+// - https://stackoverflow.com/a/34502641/9957187
+// - https://www.npmjs.com/package/waveform-util
 
 admin.initializeApp()
 
@@ -21,6 +27,8 @@ exports.encodeAudioToMP3 = functions.firestore
     const message: any = snapshot.data() // FIXME: use a better type
     console.log('context:', context)
     console.log('message:', message)
+
+    console.log('WAVEFORM:', waveform)
 
     // Get storage object
     const bucket = admin.storage().bucket()

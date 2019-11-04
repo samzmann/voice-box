@@ -71,3 +71,6 @@ build
 
 # Firebase hosting cache
 .firebase
+
+#Keys and secrets
+secrets
