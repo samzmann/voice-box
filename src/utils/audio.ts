@@ -1,3 +1,5 @@
+import getBlobDuration from 'get-blob-duration'
+
 // taken from https://medium.com/@bryanjenningz/how-to-record-and-play-audio-in-javascript-faa1b2b3e49b
 export const recordAudio = () =>
   new Promise(async (resolve, reject) => {
@@ -25,16 +27,17 @@ export const recordAudio = () =>
 
       const stop = () =>
         new Promise(resolve => {
-          mediaRecorder.addEventListener('stop', () => {
+          mediaRecorder.addEventListener('stop', async () => {
             const audioBlob = new Blob(audioChunks, { type: contentType })
             const audioUrl = URL.createObjectURL(audioBlob)
             const audio = new Audio(audioUrl)
+            const duration = await getBlobDuration(audioBlob)
 
             const play = () => {
               audio.play()
             }
 
-            resolve({ audioBlob, audioUrl, play })
+            resolve({ audioBlob, audioUrl, duration, play })
           })
 
           mediaRecorder.stop()

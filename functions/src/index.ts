@@ -6,11 +6,7 @@ import * as fs from 'fs'
 import * as ffmpeg from 'fluent-ffmpeg'
 import * as ffmpeg_static from 'ffmpeg-static'
 // @ts-ignore
-import * as waveform from 'waveform-data'
-
-// TODO: look into:
-// - https://stackoverflow.com/a/34502641/9957187
-// - https://www.npmjs.com/package/waveform-util
+import * as waveform_util from 'waveform-util'
 
 admin.initializeApp()
 
@@ -28,8 +24,6 @@ exports.encodeAudioToMP3 = functions.firestore
     console.log('context:', context)
     console.log('message:', message)
 
-    console.log('WAVEFORM:', waveform)
-
     // Get storage object
     const bucket = admin.storage().bucket()
     const object = bucket.file(message.storageFullPath)
@@ -45,7 +39,7 @@ exports.encodeAudioToMP3 = functions.firestore
     // }
 
     // Helper to make an ffmpeg command return a promise.
-    const promisifyCommand = (cmd: ffmpeg.FfmpegCommand) =>
+    const ffmpegCommandAsync = (cmd: ffmpeg.FfmpegCommand) =>
       new Promise((resolve, reject) => {
         cmd
           .on('end', resolve)
@@ -79,7 +73,35 @@ exports.encodeAudioToMP3 = functions.firestore
       .format('mp3')
       .output(targetTempFilePath)
 
-    await promisifyCommand(command)
+    await ffmpegCommandAsync(command)
+
+    // get waveform
+    const createWaveformAsync = () =>
+      new Promise((resolve, reject) => {
+        waveform_util.generate_peaks(
+          targetTempFilePath, //audio_path
+          200, // output_width
+          message.duration, // duration
+          44100, // sample_rate
+          2, //channels
+          (err: any, peaks_obj: unknown) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(peaks_obj)
+            }
+          }
+        )
+      })
+
+    let generatedWaveform: number[] = []
+
+    try {
+      const waveformData: any = await createWaveformAsync()
+      generatedWaveform = waveformData.peaks
+    } catch (error) {
+      console.log('Error generating waveform:', error)
+    }
 
     const uploadedMP3 = await bucket.upload(targetTempFilePath, {
       destination: targetStorageFilePath,
@@ -110,6 +132,7 @@ exports.encodeAudioToMP3 = functions.firestore
         downloadURL: urls[0],
         storageFullPath: admin.firestore.FieldValue.delete(),
         isAudioProcessing: admin.firestore.FieldValue.delete(),
+        waveform: generatedWaveform,
       })
 
     // Delete the old audio file

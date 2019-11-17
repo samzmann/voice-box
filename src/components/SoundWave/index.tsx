@@ -4,7 +4,11 @@ import styled from 'styled-components'
 import P5Wrapper from 'react-p5-wrapper'
 import audioWaveform from '../../p5/audioWaveform'
 
-const SoundWave: React.FC = () => {
+interface SoundWaveProps {
+  waveform: number[]
+}
+
+const SoundWave: React.FC<SoundWaveProps> = ({ waveform }) => {
   const canvasHolderRef = useRef<HTMLDivElement>(null)
 
   const [mockData, setMockData] = useState([])
@@ -31,7 +35,7 @@ const SoundWave: React.FC = () => {
       <P5Wrapper
         sketch={audioWaveform}
         parentDivRef={canvasHolderRef}
-        waveformData={mockData}
+        waveformData={waveform}
       />
     </div>
   )

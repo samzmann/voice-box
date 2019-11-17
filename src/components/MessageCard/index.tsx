@@ -115,7 +115,7 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
           progressBarRef.current = ref
         }}
       />
-      {isAudioInitialized && <SoundWave />}
+      {isAudioInitialized && <SoundWave waveform={message.waveform} />}
       <Bottom>
         <CodeLink to={`/${message.shortId}`}>{message.shortId}</CodeLink>
         <PlayButton onClick={toggleAudio}>

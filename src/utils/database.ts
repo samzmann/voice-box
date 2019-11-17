@@ -5,6 +5,8 @@ export interface MessageDocument {
   downloadURL: string
   storageFullPath?: string
   isAudioProcessing?: boolean
+  duration: number
+  waveform?: number[]
   // owner: string // TODO: add id of message owner
 }
 

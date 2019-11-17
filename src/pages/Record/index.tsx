@@ -99,6 +99,7 @@ const Record: React.FC<RecordPageProps> = () => {
             downloadURL,
             storageFullPath: uploadTask.snapshot.ref.fullPath,
             isAudioProcessing: true,
+            duration: audio.duration,
           })
 
           setMessageShortId(newShortId)

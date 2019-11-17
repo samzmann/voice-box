@@ -52,7 +52,7 @@ const audioWaveform = (p: any) => {
     for (let i = 0; i < normalizedData.length; i++) {
       const posX = actualGutter + i * (barWidth + actualGutter)
       const posY = p.height
-      const randHeight = p.map(normalizedData[i], 0, 255, 0, p.height)
+      const randHeight = p.map(normalizedData[i], 0, 1, 0, p.height)
       const barHeight = -(posY - (posY - randHeight))
       p.rect(posX, posY, barWidth, barHeight)
     }

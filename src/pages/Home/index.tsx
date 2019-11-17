@@ -22,23 +22,26 @@ const Home: React.FC<HomePageProps> = () => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    let isMounted = true
     const getMessageList = async () => {
-      setLoading(true)
+      isMounted && setLoading(true)
       try {
         const msgs = await getMessages()
         console.log(msgs)
-        setMessages(msgs)
-        setLoading(false)
+        isMounted && setMessages(msgs)
+        isMounted && setLoading(false)
       } catch (error) {
         console.log(error)
-        setLoading(false)
-        setError('Something went wrong, please reload the page.')
+        isMounted && setLoading(false)
+        isMounted && setError('Something went wrong, please reload the page.')
       }
     }
 
     getMessageList()
 
-    // TODO: add cleanup, cancel getMessages if unmounted
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   return (
