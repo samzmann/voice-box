@@ -2,8 +2,7 @@ import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 import { color } from '../constants/color'
 
-const soundwave = (p: any) => {
-  let canvas
+const audioSpectrum = (p: any) => {
   let canvasInitialized = false
   let parentDivRef: HTMLDivElement = null
 
@@ -11,7 +10,7 @@ const soundwave = (p: any) => {
   let fft: p5.FFT
 
   p.setup = () => {
-    canvas = p.createCanvas(0, 0)
+    p.createCanvas(0, 0)
     p.background(color.DarkGrey)
 
     mic = new p5.AudioIn()
@@ -58,13 +57,13 @@ const soundwave = (p: any) => {
   p.myCustomRedrawAccordingToNewPropsHandler = (newProps: any) => {
     console.log('newProps', newProps)
 
+    // set the canvas size to parent div's size
     if (!canvasInitialized) {
       const { parentDivRef: parentDivRefProp } = newProps
       parentDivRef = parentDivRefProp.current
 
       if (parentDivRef) {
         const { clientWidth, clientHeight } = parentDivRef
-        console.log({ clientWidth, clientHeight })
         p.resizeCanvas(clientWidth, clientHeight)
         canvasInitialized = true
       }
@@ -72,4 +71,4 @@ const soundwave = (p: any) => {
   }
 }
 
-export default soundwave
+export default audioSpectrum

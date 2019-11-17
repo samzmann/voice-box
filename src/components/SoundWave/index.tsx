@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import React, { useRef } from 'react'
 // @ts-ignore
 import P5Wrapper from 'react-p5-wrapper'
 import audioWaveform from '../../p5/audioWaveform'

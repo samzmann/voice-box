@@ -2,7 +2,6 @@ import 'p5/lib/addons/p5.sound'
 import { color } from '../constants/color'
 
 const audioWaveform = (p: any) => {
-  let canvas
   let canvasInitialized = false
   let parentDivRef: HTMLDivElement = null
 
@@ -11,7 +10,7 @@ const audioWaveform = (p: any) => {
   let maxAmplitude = 0
 
   p.setup = () => {
-    canvas = p.createCanvas(0, 0)
+    p.createCanvas(0, 0)
     p.background(color.DarkGrey)
   }
 
@@ -72,13 +71,13 @@ const audioWaveform = (p: any) => {
   p.myCustomRedrawAccordingToNewPropsHandler = (newProps: any) => {
     console.log('newProps', newProps)
 
+    // set the canvas size to parent div's size
     if (!canvasInitialized) {
       const { parentDivRef: parentDivRefProp } = newProps
       parentDivRef = parentDivRefProp.current
 
       if (parentDivRef) {
         const { clientWidth, clientHeight } = parentDivRef
-        console.log({ clientWidth, clientHeight })
         p.resizeCanvas(clientWidth, clientHeight)
         canvasInitialized = true
       }
