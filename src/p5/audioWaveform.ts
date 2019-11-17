@@ -8,6 +8,7 @@ const audioWaveform = (p: any) => {
 
   let waveformData: number[] = []
   let normalizedData: number[] = []
+  let maxAmplitude = 0
 
   p.setup = () => {
     canvas = p.createCanvas(0, 0)
@@ -29,6 +30,7 @@ const audioWaveform = (p: any) => {
     // will produce an array with three values representing the average
     if (normalizedData.length !== numRects) {
       normalizedData = []
+      maxAmplitude = 0
 
       // generate a temporary array of length = numRects,
       // each value is an array of values in waveformArray
@@ -43,8 +45,12 @@ const audioWaveform = (p: any) => {
 
       // generate the average of each value array in temp array
       for (let i = 0; i < temp.length; i++) {
-        normalizedData[i] =
+        const averagedAmplitude =
           temp[i].reduce((a: number, b: number) => a + b, 0) / temp[i].length
+        normalizedData[i] = averagedAmplitude
+        if (averagedAmplitude > maxAmplitude) {
+          maxAmplitude = averagedAmplitude
+        }
       }
     }
 
@@ -52,7 +58,7 @@ const audioWaveform = (p: any) => {
     for (let i = 0; i < normalizedData.length; i++) {
       const posX = actualGutter + i * (barWidth + actualGutter)
       const posY = p.height
-      const randHeight = p.map(normalizedData[i], 0, 1, 0, p.height)
+      const randHeight = p.map(normalizedData[i], 0, maxAmplitude, 0, p.height)
       const barHeight = -(posY - (posY - randHeight))
       p.rect(posX, posY, barWidth, barHeight)
     }
@@ -79,7 +85,9 @@ const audioWaveform = (p: any) => {
     }
 
     const { waveformData: waveformDataFromProps } = newProps
-    waveformData = waveformDataFromProps
+    if (waveformDataFromProps) {
+      waveformData = waveformDataFromProps
+    }
   }
 }
 

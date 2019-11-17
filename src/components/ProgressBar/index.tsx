@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { color } from '../../constants/color'
+import { padding } from '../../constants/padding'
 
 interface ProgressBarProps {
   innerRef(ref: HTMLDivElement): void
 }
 
 const Container = styled.div`
-  height: 8px;
+  height: ${padding.s}px;
   width: 100%;
   background-color: ${color.Grey};
 `
