@@ -9,6 +9,8 @@ const audioSpectrum = (p: any) => {
   let mic
   let fft: p5.FFT
 
+  let isMicOn = false
+
   p.setup = () => {
     p.createCanvas(0, 0)
     p.background(color.DarkGrey)
@@ -58,14 +60,23 @@ const audioSpectrum = (p: any) => {
     console.log('newProps', newProps)
 
     // set the canvas size to parent div's size
-    if (!canvasInitialized) {
-      const { parentDivRef: parentDivRefProp } = newProps
-      parentDivRef = parentDivRefProp.current
+    // if (!canvasInitialized) {
+    const { parentDivRef: parentDivRefProp } = newProps
+    parentDivRef = parentDivRefProp.current
 
-      if (parentDivRef) {
-        const { clientWidth, clientHeight } = parentDivRef
-        p.resizeCanvas(clientWidth, clientHeight)
-        canvasInitialized = true
+    if (parentDivRef) {
+      const { clientWidth, clientHeight } = parentDivRef
+      p.resizeCanvas(clientWidth, clientHeight)
+      canvasInitialized = true
+      console.log('canvasInitialized', canvasInitialized)
+    }
+    // }
+
+    const { userHasInteracted } = newProps
+    if (!isMicOn && userHasInteracted) {
+      if (p.getAudioContext().state !== 'running') {
+        p.getAudioContext().resume()
+        isMicOn = true
       }
     }
   }

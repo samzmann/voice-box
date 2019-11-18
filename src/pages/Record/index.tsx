@@ -19,6 +19,7 @@ interface RecordPageProps extends RouteComponentProps {}
 const Record: React.FC<RecordPageProps> = () => {
   const [recorder, setRecorder] = useState()
   const [isRecording, setIsRecording] = useState(false)
+  const [userHasInteracted, setUserHasInteracted] = useState(false)
   const [audio, setAudio] = useState(null)
   const [duration, setDuration] = useState(0)
   const [uploadStatus, setUploadStatus] = useState(UPLOAD_STATUS.WAITING)
@@ -42,6 +43,7 @@ const Record: React.FC<RecordPageProps> = () => {
       setAudio(null)
       setDuration(0)
       recorder.start()
+      !userHasInteracted && setUserHasInteracted(true)
     }
   }
 
@@ -114,7 +116,7 @@ const Record: React.FC<RecordPageProps> = () => {
   return (
     <div>
       <h1>Record Page</h1>
-      <MicInputSpectrum />
+      <MicInputSpectrum userHasInteracted={userHasInteracted} />
       <button onClick={handleRecord}>
         {isRecording ? 'Stop' : 'Start'} recording
       </button>
