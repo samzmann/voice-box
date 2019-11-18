@@ -37,6 +37,8 @@ const audioSpectrum = (p: any) => {
     // averages out the values of the 1024 bins returned by fft.analyze()
     const averagedSpectrum = fft.linAverages(numRects)
 
+    // TODO: look at git stash where I only took human voice frequency range,
+    //  and used p5 lerp to fill in missing values
     for (let i = 0; i < numRects; i++) {
       const posX = actualGutter + i * (barWidth + actualGutter)
       const posY = p.height
