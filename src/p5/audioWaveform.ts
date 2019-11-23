@@ -69,8 +69,6 @@ const audioWaveform = (p: any) => {
   }
 
   p.myCustomRedrawAccordingToNewPropsHandler = (newProps: any) => {
-    console.log('newProps', newProps)
-
     // set the canvas size to parent div's size
     if (!canvasInitialized) {
       const { parentDivRef: parentDivRefProp } = newProps

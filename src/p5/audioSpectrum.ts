@@ -64,20 +64,17 @@ const audioSpectrum = (p: any) => {
   }
 
   p.myCustomRedrawAccordingToNewPropsHandler = (newProps: any) => {
-    console.log('newProps', newProps)
-
     // set the canvas size to parent div's size
-    // if (!canvasInitialized) {
-    const { parentDivRef: parentDivRefProp } = newProps
-    parentDivRef = parentDivRefProp.current
+    if (!canvasInitialized) {
+      const { parentDivRef: parentDivRefProp } = newProps
+      parentDivRef = parentDivRefProp.current
 
-    if (parentDivRef) {
-      const { clientWidth, clientHeight } = parentDivRef
-      p.resizeCanvas(clientWidth, clientHeight)
-      canvasInitialized = true
-      console.log('canvasInitialized', canvasInitialized)
+      if (parentDivRef) {
+        const { clientWidth, clientHeight } = parentDivRef
+        p.resizeCanvas(clientWidth, clientHeight)
+        canvasInitialized = true
+      }
     }
-    // }
 
     const { userHasInteracted } = newProps
     if (!isMicOn && userHasInteracted) {
