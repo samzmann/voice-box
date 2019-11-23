@@ -6,6 +6,8 @@ import { recordAudio } from '../../utils/audio'
 import { createMessage } from '../../utils/database'
 import Loading from '../../components/Loading'
 import MicInputSpectrum from '../../components/MicInputSpectrum'
+import { ButtonStandard } from '../../elements/buttons/ButtonStandard'
+import styled from 'styled-components'
 
 enum UPLOAD_STATUS {
   WAITING,
@@ -13,6 +15,10 @@ enum UPLOAD_STATUS {
   COMPLETE,
   ERROR,
 }
+
+const ButtonRow = styled.div`
+  flex-direction: row;
+`
 
 interface RecordPageProps extends RouteComponentProps {}
 
@@ -57,13 +63,13 @@ const Record: React.FC<RecordPageProps> = () => {
     return () => clearInterval(interval)
   }, [isRecording, duration])
 
-  const playRecording = () => {
+  const handlePlay = () => {
     if (audio && audio.play) {
       audio.play()
     }
   }
 
-  const saveRecording = async () => {
+  const handleSave = async () => {
     try {
       setUploadStatus(UPLOAD_STATUS.UPLOADING)
 
@@ -117,15 +123,17 @@ const Record: React.FC<RecordPageProps> = () => {
     <div>
       <h1>Record Page</h1>
       <MicInputSpectrum userHasInteracted={userHasInteracted} />
-      <button onClick={handleRecord}>
-        {isRecording ? 'Stop' : 'Start'} recording
-      </button>
-      <button onClick={playRecording} disabled={isRecording}>
-        Play recording
-      </button>
-      <button onClick={saveRecording} disabled={isRecording}>
-        Save recording
-      </button>
+      <ButtonRow>
+        <ButtonStandard onClick={handleRecord}>
+          {isRecording ? 'finish' : 'record'}
+        </ButtonStandard>
+        <ButtonStandard onClick={handlePlay} disabled={isRecording}>
+          play
+        </ButtonStandard>
+        <ButtonStandard onClick={handleSave} disabled={isRecording}>
+          save
+        </ButtonStandard>
+      </ButtonRow>
       <div>{duration}</div>
       {uploadStatus === UPLOAD_STATUS.UPLOADING && <Loading />}
       {uploadStatus === UPLOAD_STATUS.COMPLETE && (

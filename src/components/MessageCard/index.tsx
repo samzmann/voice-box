@@ -6,6 +6,7 @@ import { color } from '../../constants/color'
 import { MessageDocument } from '../../utils/database'
 import ProgressBar from '../ProgressBar'
 import SoundWave from '../SoundWave'
+import { ButtonStandard } from '../../elements/buttons/ButtonStandard'
 
 interface MessageCardProps {
   message: MessageDocument
@@ -28,24 +29,6 @@ const CodeLink = styled(Link)`
   &:hover {
     cursor: pointer;
     text-decoration: underline;
-  }
-`
-
-const PlayButton = styled.div`
-  padding-top: ${padding.s}px;
-  padding-bottom: ${padding.s}px;
-  padding-left: ${padding.m}px;
-  padding-right: ${padding.m}px;
-  border-style: solid;
-  border-width: 2px;
-  border-color: ${color.LightGrey};
-  font-size: 16px;
-
-  &:hover {
-    background-color: ${color.LightGrey};
-    border-color: ${color.Grey};
-    color: ${color.Grey};
-    cursor: pointer;
   }
 `
 
@@ -120,9 +103,9 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
       <div style={{ height: padding.s }} />
       <Bottom>
         <CodeLink to={`/${message.shortId}`}>{message.shortId}</CodeLink>
-        <PlayButton onClick={toggleAudio}>
+        <ButtonStandard onClick={toggleAudio}>
           {isPlaying ? 'pause' : 'play'}
-        </PlayButton>
+        </ButtonStandard>
       </Bottom>
       <BottomLine />
     </Container>
