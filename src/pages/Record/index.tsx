@@ -9,6 +9,7 @@ import MicInputSpectrum from '../../components/MicInputSpectrum'
 import { ButtonStandard } from '../../elements/buttons/ButtonStandard'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
+import { PageContainer } from '../../elements/PageContainer'
 
 enum UPLOAD_STATUS {
   WAITING,
@@ -16,15 +17,6 @@ enum UPLOAD_STATUS {
   COMPLETE,
   ERROR,
 }
-
-const Container = styled.div`
-  align-self: center;
-  width: 100%;
-
-  @media (min-width: 768px) {
-    max-width: 375px;
-  }
-`
 
 const ButtonRow = styled.div`
   flex-direction: row;
@@ -147,7 +139,7 @@ const Record: React.FC<RecordPageProps> = () => {
   }
 
   return (
-    <Container>
+    <PageContainer>
       <h1>Record Page</h1>
       <MicInputSpectrum userHasInteracted={userHasInteracted} />
       <ButtonRow>
@@ -177,7 +169,7 @@ const Record: React.FC<RecordPageProps> = () => {
           <CodeLink to={`/${messageShortId}`}>{messageShortId}</CodeLink>
         </p>
       )}
-    </Container>
+    </PageContainer>
   )
 }
 
