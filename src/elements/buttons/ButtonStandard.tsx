@@ -24,7 +24,7 @@ const Container = styled.div`
 `
 
 interface ButtonProps {
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
   disabled?: boolean
 }
 
