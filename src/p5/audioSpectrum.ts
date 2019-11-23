@@ -18,7 +18,7 @@ const audioSpectrum = (p: any) => {
     mic = new p5.AudioIn()
     mic.start()
 
-    fft = new p5.FFT(0.95)
+    fft = new p5.FFT(0.95, 512)
     fft.setInput(mic)
   }
 
@@ -32,20 +32,25 @@ const audioSpectrum = (p: any) => {
     const numRects = p.floor(p.width / (barWidth + gutterWidth))
     const actualGutter = (p.width - numRects * barWidth) / (numRects + 1)
 
-    fft.analyze()
+    const spectrum = fft.analyze(512)
 
-    // averages out the values of the 1024 bins returned by fft.analyze()
-    const averagedSpectrum = fft.linAverages(numRects)
+    // TODO: complete this:
+    // Only keep frequencies between 85 and 255 Hz, which is
+    // the frequency range of the human voice
+    // -> https://en.wikipedia.org/wiki/Voice_frequency
+    // We map from 20 to 15k Hz, which is apparently the range
+    // that p5.Sound works with
+    // -> https://github.com/processing/p5.js-sound/issues/307
+    const lowCut = p.floor(p.map(85, 20, 15000, 0, 1024))
+    const highCut = p.floor(p.map(255, 20, 15000, 0, 1024))
 
-    // TODO: look at git stash where I only took human voice frequency range,
-    //  and used p5 lerp to fill in missing values
     for (let i = 0; i < numRects; i++) {
       const posX = actualGutter + i * (barWidth + actualGutter)
       const posY = p.height
       const barHeight = p.map(
-        averagedSpectrum[i],
+        spectrum[i + lowCut], // start at lowCut (but the loop still starts at 0 to make positioning easier)
         0,
-        255,
+        200, // go to 200 instead of 255 because there aren't many high values
         0.01 * p.height,
         p.height
       )
