@@ -8,7 +8,12 @@ import * as ffmpeg_static from 'ffmpeg-static'
 // @ts-ignore
 import * as waveform_util from 'waveform-util'
 
-admin.initializeApp()
+const serviceAccount = require('../secrets/voice-box-dev-ed067e31c2c1.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: 'voice-box-dev.appspot.com',
+})
 
 /**
  *
