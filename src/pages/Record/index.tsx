@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { RouteComponentProps } from '@reach/router'
+import { Link, RouteComponentProps } from '@reach/router'
 import firebase from '../../firebase'
 import { firestoreAutoId, shortId } from '../../utils/ids'
 import { recordAudio } from '../../utils/audio'
@@ -8,6 +8,7 @@ import Loading from '../../components/Loading'
 import MicInputSpectrum from '../../components/MicInputSpectrum'
 import { ButtonStandard } from '../../elements/buttons/ButtonStandard'
 import styled from 'styled-components'
+import { padding } from '../../constants/padding'
 
 enum UPLOAD_STATUS {
   WAITING,
@@ -16,8 +17,34 @@ enum UPLOAD_STATUS {
   ERROR,
 }
 
+const Container = styled.div`
+  align-self: center;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    max-width: 375px;
+  }
+`
+
 const ButtonRow = styled.div`
   flex-direction: row;
+  justify-content: space-between;
+  margin-top: ${padding.s}px;
+`
+
+const ButtonContainer = styled.div`
+  flex: 1;
+`
+
+const Space = styled.div`
+  width: ${padding.s}px;
+`
+
+const CodeLink = styled(Link)`
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 `
 
 interface RecordPageProps extends RouteComponentProps {}
@@ -120,26 +147,37 @@ const Record: React.FC<RecordPageProps> = () => {
   }
 
   return (
-    <div>
+    <Container>
       <h1>Record Page</h1>
       <MicInputSpectrum userHasInteracted={userHasInteracted} />
       <ButtonRow>
-        <ButtonStandard onClick={handleRecord}>
-          {isRecording ? 'finish' : 'record'}
-        </ButtonStandard>
-        <ButtonStandard onClick={handlePlay} disabled={isRecording}>
-          play
-        </ButtonStandard>
-        <ButtonStandard onClick={handleSave} disabled={isRecording}>
-          save
-        </ButtonStandard>
+        <ButtonContainer>
+          <ButtonStandard onClick={handleRecord}>
+            {isRecording ? 'finish' : 'record'}
+          </ButtonStandard>
+        </ButtonContainer>
+        <Space />
+        <ButtonContainer>
+          <ButtonStandard onClick={handlePlay} disabled={isRecording}>
+            play
+          </ButtonStandard>
+        </ButtonContainer>
+        <Space />
+        <ButtonContainer>
+          <ButtonStandard onClick={handleSave} disabled={isRecording}>
+            save
+          </ButtonStandard>
+        </ButtonContainer>
       </ButtonRow>
       <div>{duration}</div>
       {uploadStatus === UPLOAD_STATUS.UPLOADING && <Loading />}
       {uploadStatus === UPLOAD_STATUS.COMPLETE && (
-        <div>Share your message with this id: {messageShortId}</div>
+        <p>
+          Share your message with this id:{' '}
+          <CodeLink to={`/${messageShortId}`}>{messageShortId}</CodeLink>
+        </p>
       )}
-    </div>
+    </Container>
   )
 }
 
