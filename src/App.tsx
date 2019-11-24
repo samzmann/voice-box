@@ -6,6 +6,7 @@ import Nav from './components/Nav'
 import Home from './pages/Home'
 import Record from './pages/Record'
 import Message from './pages/Message'
+import Signup from './pages/Signup'
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
       <Nav />
       <Router>
         <Home path="/" />
+        <Signup path="/signup" />
         <Record path="/record" />
         <Message path="/:shortId" />
       </Router>

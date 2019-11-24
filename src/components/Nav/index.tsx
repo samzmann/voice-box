@@ -35,7 +35,7 @@ const ButtonContainer = styled.div`
   align-self: center;
 `
 
-// TODO: fix mobile layout, ButtonStandard should be one line only, not sure if optional onClick is a good idea
+// TODO: fix mobile layout, add burger nav
 
 const Nav = () => {
   return (

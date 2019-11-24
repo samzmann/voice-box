@@ -24,6 +24,8 @@ const Container = styled.div`
   }
 `
 
+// TODO: ButtonStandard text should be one line only, not sure if optional onClick is a good idea
+
 export const ButtonStandard: React.FC<ButtonProps> = ({
   onClick,
   disabled,
