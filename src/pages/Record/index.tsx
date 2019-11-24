@@ -6,7 +6,7 @@ import { recordAudio } from '../../utils/audio'
 import { createMessage } from '../../utils/database'
 import Loading from '../../components/Loading'
 import MicInputSpectrum from '../../components/MicInputSpectrum'
-import { ButtonStandard } from '../../elements/buttons/ButtonStandard'
+import { ButtonStandard } from '../../elements/buttons'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
 import { PageContainer } from '../../elements/PageContainer'
@@ -144,21 +144,26 @@ const Record: React.FC<RecordPageProps> = () => {
       <MicInputSpectrum userHasInteracted={userHasInteracted} />
       <ButtonRow>
         <ButtonContainer>
-          <ButtonStandard onClick={handleRecord}>
-            {isRecording ? 'finish' : 'record'}
-          </ButtonStandard>
+          <ButtonStandard
+            onClick={handleRecord}
+            label={isRecording ? 'finish' : 'record'}
+          />
         </ButtonContainer>
         <Space />
         <ButtonContainer>
-          <ButtonStandard onClick={handlePlay} disabled={isRecording}>
-            play
-          </ButtonStandard>
+          <ButtonStandard
+            onClick={handlePlay}
+            disabled={isRecording}
+            label="play"
+          />
         </ButtonContainer>
         <Space />
         <ButtonContainer>
-          <ButtonStandard onClick={handleSave} disabled={isRecording}>
-            save
-          </ButtonStandard>
+          <ButtonStandard
+            onClick={handleSave}
+            disabled={isRecording}
+            label="save"
+          />
         </ButtonContainer>
       </ButtonRow>
       <div>{duration}</div>

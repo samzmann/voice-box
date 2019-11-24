@@ -6,7 +6,7 @@ import { color } from '../../constants/color'
 import { MessageDocument } from '../../utils/database'
 import ProgressBar from '../ProgressBar'
 import SoundWave from '../SoundWave'
-import { ButtonStandard } from '../../elements/buttons/ButtonStandard'
+import { ButtonStandard } from '../../elements/buttons'
 
 interface MessageCardProps {
   message: MessageDocument
@@ -103,9 +103,10 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
       <div style={{ height: padding.s }} />
       <Bottom>
         <CodeLink to={`/${message.shortId}`}>{message.shortId}</CodeLink>
-        <ButtonStandard onClick={toggleAudio}>
-          {isPlaying ? 'pause' : 'play'}
-        </ButtonStandard>
+        <ButtonStandard
+          onClick={toggleAudio}
+          label={isPlaying ? 'pause' : 'play'}
+        />
       </Bottom>
       <BottomLine />
     </Container>

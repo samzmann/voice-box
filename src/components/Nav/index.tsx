@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from '@reach/router'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
-import { ButtonStandard } from '../../elements/buttons/ButtonStandard'
+import { ButtonStandard } from '../../elements/buttons'
 
 const Container = styled.div`
   flex-direction: row;
@@ -12,11 +12,19 @@ const Container = styled.div`
 const Left = styled.div`
   flex: 1;
   flex-direction: row;
+  align-items: center;
+`
+
+const Center = styled.div`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
 `
 
 const Right = styled.div`
   flex: 1;
   align-items: flex-end;
+  justify-content: center;
 `
 
 const Space = styled.div`
@@ -26,6 +34,7 @@ const Space = styled.div`
 const ButtonContainer = styled.div`
   align-self: center;
 `
+
 // TODO: fix mobile layout, ButtonStandard should be one line only, not sure if optional onClick is a good idea
 
 const Nav = () => {
@@ -34,20 +43,23 @@ const Nav = () => {
       <Left>
         <ButtonContainer>
           <Link to="/">
-            <ButtonStandard>Home</ButtonStandard>
+            <ButtonStandard label="Home" />
           </Link>
         </ButtonContainer>
         <Space />
         <ButtonContainer>
           <Link to="/record">
-            <ButtonStandard>Record</ButtonStandard>
+            <ButtonStandard label="Record" />
           </Link>
         </ButtonContainer>
       </Left>
+      <Center>
+        <h3>vbox</h3>
+      </Center>
       <Right>
         <ButtonContainer style={{ alignSelf: 'flex-end' }}>
           <Link to="/signup">
-            <ButtonStandard>Start your channel</ButtonStandard>
+            <ButtonStandard label="Start your channel" />
           </Link>
         </ButtonContainer>
       </Right>

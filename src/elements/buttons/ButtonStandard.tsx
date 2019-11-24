@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
 import { color } from '../../constants/color'
+import { ButtonProps } from './index'
 
 const Container = styled.div`
   align-items: center;
@@ -23,13 +24,8 @@ const Container = styled.div`
   }
 `
 
-interface ButtonProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
-  disabled?: boolean
-}
-
 export const ButtonStandard: React.FC<ButtonProps> = ({
   onClick,
   disabled,
-  children,
-}) => <Container onClick={disabled ? null : onClick}>{children}</Container>
+  label,
+}) => <Container onClick={disabled ? null : onClick}>{label}</Container>
