@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { ButtonStandard } from '../elements/buttons'
 import styled from 'styled-components'
 import { color } from '../constants/color'
 import { padding } from '../constants/padding'
+import { checkAvailabilityAndCreateChannel } from '../utils/database'
+import Loading from './Loading'
+import { navigate } from '@reach/router'
 
 const Form = styled.form`
   display: flex;
@@ -57,6 +60,7 @@ const Space = styled.div`
 `
 
 export const SignupForm: React.FC = () => {
+  const [loading, setLoading] = useState(false)
   const { errors, handleChange, handleSubmit, touched, values } = useFormik({
     initialValues: {
       channelName: '',
@@ -69,8 +73,26 @@ export const SignupForm: React.FC = () => {
     }),
     validateOnBlur: true,
     validateOnChange: true,
-    onSubmit: (values, { resetForm }) => {
-      // TODO: save to db
+    onSubmit: async (values, { resetForm }) => {
+      setLoading(true)
+      try {
+        const urlSuffix = values.channelName
+          .trim()
+          .replace(/\s+/g, '-')
+          .toLowerCase()
+
+        await checkAvailabilityAndCreateChannel({
+          name: values.channelName,
+          urlSuffix,
+        })
+
+        resetForm()
+        navigate(urlSuffix)
+      } catch (error) {
+        console.log('Error in onSubmit:', error)
+        setLoading(false)
+        // TODO: show error message if name already taken
+      }
     },
   })
 
@@ -107,9 +129,13 @@ export const SignupForm: React.FC = () => {
       <Space />
       <Space />
 
-      <Button type="submit">
-        <ButtonStandard label="Submit" />
-      </Button>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Button type="submit">
+          <ButtonStandard label="Submit" />
+        </Button>
+      )}
     </Form>
   )
 }
