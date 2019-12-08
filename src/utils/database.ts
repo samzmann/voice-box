@@ -13,6 +13,7 @@ export interface MessageDocument {
 export type ChannelDocument = {
   name: string
   urlSuffix: string
+  ownerId: string
 }
 
 export const createMessage = async (message: MessageDocument) => {
@@ -98,6 +99,7 @@ export const checkAvailabilityAndCreateChannel = (channel: ChannelDocument) =>
       const channelRef = await createChannel({
         name: channel.name,
         urlSuffix: urlToTry,
+        ownerId: channel.ownerId,
       })
 
       resolve(channelRef)

@@ -8,6 +8,7 @@ import { padding } from '../constants/padding'
 import { checkAvailabilityAndCreateChannel } from '../utils/database'
 import Loading from './Loading'
 import { navigate } from '@reach/router'
+import firebase from '../firebase'
 
 const Form = styled.form`
   display: flex;
@@ -73,6 +74,7 @@ export const SignupForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [signupError, setSignupError] = useState(null)
+  const [newUser, setNewUser] = useState(null)
 
   const { errors, handleChange, handleSubmit, touched, values } = useFormik({
     initialValues: {
@@ -94,10 +96,24 @@ export const SignupForm: React.FC = () => {
     }),
     validateOnBlur: true,
     validateOnChange: true,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm, setErrors }) => {
       setLoading(true)
       setSignupError(null)
       try {
+        // In case channel creation fails further down the line, we keep the freshly created user and reuse it on retry.
+        // So we skip createUserWithEmailAndPassword if newUser exists already
+        let user = newUser
+        if (!newUser) {
+          const {
+            user: u,
+          } = await firebase.auth.createUserWithEmailAndPassword(
+            values.email,
+            values.password
+          )
+          user = u
+          setNewUser(user)
+        }
+
         const urlSuffix = values.channelName
           .trim()
           .replace(/\s+/g, '-')
@@ -106,6 +122,7 @@ export const SignupForm: React.FC = () => {
         await checkAvailabilityAndCreateChannel({
           name: values.channelName.trim(),
           urlSuffix,
+          ownerId: user.uid,
         })
 
         resetForm()
@@ -114,6 +131,8 @@ export const SignupForm: React.FC = () => {
         console.log('Error in onSubmit:', error)
         if (error.nameTaken) {
           setSignupError('This channel name is already taken.')
+        } else if (error.code === 'auth/email-already-in-use') {
+          setErrors({ email: 'This email is already taken.' })
         } else {
           setSignupError('Something went wrong, please try again.')
         }
