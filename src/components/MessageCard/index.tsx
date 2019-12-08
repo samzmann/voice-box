@@ -102,7 +102,7 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
       />
       <div style={{ height: padding.s }} />
       <Bottom>
-        <CodeLink to={`/${message.shortId}`}>{message.shortId}</CodeLink>
+        <CodeLink to={`/m/${message.shortId}`}>{message.shortId}</CodeLink>
         <ButtonStandard
           onClick={toggleAudio}
           label={isPlaying ? 'pause' : 'play'}

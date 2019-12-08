@@ -171,7 +171,7 @@ const Record: React.FC<RecordPageProps> = () => {
       {uploadStatus === UPLOAD_STATUS.COMPLETE && (
         <p>
           Share your message with this id:{' '}
-          <CodeLink to={`/${messageShortId}`}>{messageShortId}</CodeLink>
+          <CodeLink to={`/m/${messageShortId}`}>{messageShortId}</CodeLink>
         </p>
       )}
     </PageContainer>

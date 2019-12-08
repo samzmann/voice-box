@@ -20,8 +20,8 @@ const App: React.FC = () => {
           <Home path="/" />
           <Signup path="/signup" />
           <Record path="/record" />
-          <Message path="/:shortId" />
-          {/*<Channel path="/:urlSuffix" />*/}
+          <Channel path="/:urlSuffix" />
+          <Message path="/m/:shortId" />
         </Router>
       </div>
     </AuthContext.Provider>
