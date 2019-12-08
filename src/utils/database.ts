@@ -7,7 +7,7 @@ export interface MessageDocument {
   isAudioProcessing?: boolean
   duration: number
   waveform?: number[]
-  // owner: string // TODO: add id of message owner
+  ownerId: string
 }
 
 export type ChannelDocument = {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, RouteComponentProps } from '@reach/router'
 import firebase from '../../firebase'
 import { firestoreAutoId, shortId } from '../../utils/ids'
@@ -10,6 +10,7 @@ import { ButtonStandard } from '../../elements/buttons'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
 import { PageContainer } from '../../elements/PageContainer'
+import { AuthContext } from '../../firebase/auth'
 
 enum UPLOAD_STATUS {
   WAITING,
@@ -49,6 +50,8 @@ const Record: React.FC<RecordPageProps> = () => {
   const [duration, setDuration] = useState(0)
   const [uploadStatus, setUploadStatus] = useState(UPLOAD_STATUS.WAITING)
   const [messageShortId, setMessageShortId] = useState(null)
+
+  const { authUser } = useContext(AuthContext)
 
   useEffect(() => {
     const initializeRecorder = async () => {
@@ -127,6 +130,7 @@ const Record: React.FC<RecordPageProps> = () => {
             storageFullPath: uploadTask.snapshot.ref.fullPath,
             isAudioProcessing: true,
             duration: audio.duration,
+            ownerId: authUser.uid,
           })
 
           setMessageShortId(newShortId)
