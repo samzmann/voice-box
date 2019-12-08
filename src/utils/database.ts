@@ -71,24 +71,34 @@ export const createChannel = async (channel: ChannelDocument) => {
 export const checkAvailabilityAndCreateChannel = (channel: ChannelDocument) =>
   new Promise(async (resolve, reject) => {
     try {
-      // TODO: fail fast?
-      //  Also: getChannelByUrlSuffix should loop until a valid url is found, cause the user has no say on what the url is (this should be done in the signup form)
-      const results = await Promise.all([
-        getChannelByName(channel.name),
-        getChannelByUrlSuffix(channel.urlSuffix),
-      ])
-      console.log('results', results)
+      const nameTaken = await getChannelByName(channel.name)
 
-      const nameTaken = results[0] !== null
-      const urlTaken = results[0] !== null
-
-      console.log({ nameTaken, urlTaken })
-
-      if (nameTaken || urlTaken) {
-        return reject({ nameTaken, urlTaken })
+      if (nameTaken) {
+        return reject({ nameTaken })
       }
 
-      const channelRef = await createChannel(channel)
+      let urlTaken = true
+      let urlToTry = channel.urlSuffix
+      let urlIterator: number = 0
+
+      // TODO: keep a list of restricted urls suffixes (e.g record, signup, etc...)
+
+      // check if url is taken, we want to make sure the url is available.
+      // loop until an available one is found.
+      while (urlTaken) {
+        const result = await getChannelByUrlSuffix(urlToTry)
+        urlTaken = !!result
+        if (!urlTaken) {
+          break
+        }
+        urlIterator++
+        urlToTry = `${urlToTry}-${urlIterator}`
+      }
+
+      const channelRef = await createChannel({
+        name: channel.name,
+        urlSuffix: urlToTry,
+      })
 
       resolve(channelRef)
     } catch (error) {

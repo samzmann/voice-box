@@ -61,6 +61,7 @@ const Space = styled.div`
 
 export const SignupForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
+  const [signupError, setSignupError] = useState(null)
   const { errors, handleChange, handleSubmit, touched, values } = useFormik({
     initialValues: {
       channelName: '',
@@ -68,13 +69,14 @@ export const SignupForm: React.FC = () => {
     validationSchema: Yup.object({
       channelName: Yup.string()
         .min(2, 'too short')
-        .max(10, 'too long')
+        .max(60, 'too long')
         .required('required'),
     }),
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit: async (values, { resetForm }) => {
       setLoading(true)
+      setSignupError(null)
       try {
         const urlSuffix = values.channelName
           .trim()
@@ -82,7 +84,7 @@ export const SignupForm: React.FC = () => {
           .toLowerCase()
 
         await checkAvailabilityAndCreateChannel({
-          name: values.channelName,
+          name: values.channelName.trim(),
           urlSuffix,
         })
 
@@ -90,8 +92,12 @@ export const SignupForm: React.FC = () => {
         navigate(urlSuffix)
       } catch (error) {
         console.log('Error in onSubmit:', error)
+        if (error.nameTaken) {
+          setSignupError('This channel name is already taken.')
+        } else {
+          setSignupError('Something went wrong, please try again.')
+        }
         setLoading(false)
-        // TODO: show error message if name already taken
       }
     },
   })
@@ -108,7 +114,12 @@ export const SignupForm: React.FC = () => {
         id="channelName"
         name="channelName"
         type="text"
-        onChange={handleChange}
+        onChange={e => {
+          handleChange(e)
+          if (signupError) {
+            setSignupError(null)
+          }
+        }}
         value={values.channelName}
         autoComplete="off"
       />
@@ -127,6 +138,9 @@ export const SignupForm: React.FC = () => {
       </p>
 
       <Space />
+
+      {signupError && <ErrorLabel>{signupError}</ErrorLabel>}
+
       <Space />
 
       {loading ? (
