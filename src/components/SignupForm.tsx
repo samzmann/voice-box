@@ -59,17 +59,37 @@ const Space = styled.div`
   height: ${padding.m}px;
 `
 
+const ShowPassword = styled.a`
+  font-size: 16px;
+  font-weight: 400;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`
+
 export const SignupForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [signupError, setSignupError] = useState(null)
+
   const { errors, handleChange, handleSubmit, touched, values } = useFormik({
     initialValues: {
       channelName: '',
+      email: '',
+      password: '',
     },
     validationSchema: Yup.object({
       channelName: Yup.string()
-        .min(2, 'too short')
+        .min(2, 'too short (min 2)')
         .max(60, 'too long')
+        .required('required'),
+      email: Yup.string()
+        .email('must be a valid email')
+        .required('required'),
+      password: Yup.string()
+        .min(8, 'too short (min 8)')
         .required('required'),
     }),
     validateOnBlur: true,
@@ -136,6 +156,46 @@ export const SignupForm: React.FC = () => {
           {urlSuffix || '...'}
         </strong>
       </p>
+
+      <Space />
+
+      <Label htmlFor="email">Email</Label>
+      <Input
+        id="email"
+        name="email"
+        type="email"
+        onChange={handleChange}
+        value={values.email}
+        autoComplete="off"
+      />
+      {touched.email && errors.email && <ErrorLabel>{errors.email}</ErrorLabel>}
+
+      <Space />
+
+      <Label htmlFor="password">
+        Password (
+        <ShowPassword
+          style={{ width: 20, height: 20 }}
+          onClick={() =>
+            setShowPassword(currentShowPassword => !currentShowPassword)
+          }
+        >
+          {showPassword ? 'hide' : 'show'}
+        </ShowPassword>
+        )
+      </Label>
+      <Input
+        id="password"
+        name="password"
+        type={showPassword ? 'text' : 'password'}
+        onChange={handleChange}
+        value={values.password}
+        autoComplete="off"
+      />
+
+      {touched.password && errors.password && (
+        <ErrorLabel>{errors.password}</ErrorLabel>
+      )}
 
       <Space />
 
