@@ -13,11 +13,17 @@ import firebase from '../firebase'
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
 `
 
 const Label = styled.label`
   font-size: 18px;
+  font-weight: 600;
+  margin-bottom: ${padding.s}px;
+`
+
+const LabelLight = styled.label`
+  font-size: 16px;
   font-weight: 600;
   margin-bottom: ${padding.s}px;
 `
@@ -42,7 +48,8 @@ const Input = styled.input`
   }
 `
 
-const Button = styled.button`
+const ButtonContainer = styled.button`
+  align-self: center;
   background-color: ${color.DarkGrey};
   font-size: 100%;
   font-family: inherit;
@@ -103,7 +110,7 @@ export const SignupForm: React.FC = () => {
         // In case channel creation fails further down the line, we keep the freshly created user and reuse it on retry.
         // So we skip createUserWithEmailAndPassword if newUser exists already
         let user = newUser
-        if (!newUser) {
+        if (!newUser || newUser.email !== values.email) {
           const {
             user: u,
           } = await firebase.auth.createUserWithEmailAndPassword(
@@ -130,7 +137,7 @@ export const SignupForm: React.FC = () => {
       } catch (error) {
         console.log('Error in onSubmit:', error)
         if (error.nameTaken) {
-          setSignupError('This channel name is already taken.')
+          setErrors({ channelName: 'This channel name is already taken.' })
         } else if (error.code === 'auth/email-already-in-use') {
           setErrors({ email: 'This email is already taken.' })
         } else {
@@ -168,7 +175,7 @@ export const SignupForm: React.FC = () => {
 
       <Space />
 
-      <Label>You channel url will be:</Label>
+      <LabelLight>Your channel url will be:</LabelLight>
       <p>
         vbox.fm/
         <strong style={{ color: urlSuffix ? color.Yellow : 'inherit' }}>
@@ -225,9 +232,9 @@ export const SignupForm: React.FC = () => {
       {loading ? (
         <Loading />
       ) : (
-        <Button type="submit">
+        <ButtonContainer type="submit">
           <ButtonStandard label="Submit" />
-        </Button>
+        </ButtonContainer>
       )}
     </Form>
   )
