@@ -130,6 +130,7 @@ export const SignupForm: React.FC = () => {
           name: values.channelName.trim(),
           urlSuffix,
           ownerId: user.uid,
+          createdAt: firebase.db.FieldValue.serverTimestamp(),
         })
 
         resetForm()

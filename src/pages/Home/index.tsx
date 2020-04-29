@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps } from '@reach/router'
-import MessageList from './MessageList'
+import MessageList from '../../components/MessageList'
 import { getMessages } from '../../utils/database'
 import Loading from '../../components/Loading'
 import { PageContainer } from '../../elements/PageContainer'

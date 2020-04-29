@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import MessageCard from '../../../components/MessageCard'
-import { MessageDocument } from '../../../utils/database'
+import MessageCard from '../MessageCard'
+import { MessageDocument } from '../../utils/database'
+
+const Container = styled.div``
 
 interface MessageListProps {
   messages: MessageDocument[]
 }
-
-const Container = styled.div``
 
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   return (

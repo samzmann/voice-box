@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps } from '@reach/router'
-import { getChannelByUrlSuffix } from '../../utils/database'
+import { getChannelByUrlSuffix, getLastMessages } from '../../utils/database'
 import Loading from '../../components/Loading'
 import { PageContainer } from '../../elements/PageContainer'
+import MessageList from '../../components/MessageList'
 
 interface ChannelPageProps extends RouteComponentProps {
   urlSuffix?: string
@@ -10,6 +11,7 @@ interface ChannelPageProps extends RouteComponentProps {
 
 const Channel: React.FC<ChannelPageProps> = ({ urlSuffix }) => {
   const [channel, setChannel] = useState(null)
+  const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -39,12 +41,35 @@ const Channel: React.FC<ChannelPageProps> = ({ urlSuffix }) => {
     }
   }, [urlSuffix])
 
+  useEffect(() => {
+    let isMounted = true
+
+    const getMessages = async () => {
+      try {
+        if (channel) {
+          const msgs = await getLastMessages(channel.ownerId)
+          console.log('msgs', msgs)
+          isMounted && setMessages(msgs)
+        }
+      } catch (error) {
+        console.log(error)
+        isMounted && setError(error.message)
+      }
+    }
+
+    getMessages()
+
+    return () => {
+      isMounted = false
+    }
+  }, [channel])
+
   return (
     <PageContainer>
-      <h1>Channel Page</h1>
       {loading && <Loading />}
-      {channel && <h3>{channel.name}</h3>}
+      {channel && <h1>{channel.name}</h1>}
       {error && <div>{error}</div>}
+      {messages && <MessageList messages={messages} />}
     </PageContainer>
   )
 }

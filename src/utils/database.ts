@@ -8,17 +8,22 @@ export interface MessageDocument {
   duration: number
   waveform?: number[]
   ownerId: string
+  createdAt: firebase.firestore.FieldValue
 }
 
 export type ChannelDocument = {
   name: string
   urlSuffix: string
   ownerId: string
+  createdAt: firebase.firestore.FieldValue
 }
 
 export const createMessage = async (message: MessageDocument) => {
   try {
-    const ref = await firebase.db.collection('messages').add(message)
+    const ref = await firebase
+      .db()
+      .collection('messages')
+      .add(message)
     return ref
   } catch (error) {
     console.log('Error creating message document:', error)
@@ -28,7 +33,8 @@ export const createMessage = async (message: MessageDocument) => {
 export const getMessageByShortId = (shortId: string) =>
   new Promise<any>(async (resolve, reject) => {
     try {
-      const querySnapshot = await firebase.db
+      const querySnapshot = await firebase
+        .db()
         .collection('messages')
         .where('shortId', '==', shortId)
         .get()
@@ -47,7 +53,31 @@ export const getMessageByShortId = (shortId: string) =>
 export const getMessages = () =>
   new Promise<any[]>(async (resolve, reject) => {
     try {
-      const querySnapshot = await firebase.db.collection('messages').get()
+      const querySnapshot = await firebase
+        .db()
+        .collection('messages')
+        .get()
+
+      if (querySnapshot.docs.length) {
+        return resolve(querySnapshot.docs.map(message => message.data()))
+      }
+
+      throw new Error('No messages found.')
+    } catch (error) {
+      console.log('Error fetching messages:', error)
+      reject(error)
+    }
+  })
+
+export const getLastMessages = (ownerId: string) =>
+  new Promise<any[]>(async (resolve, reject) => {
+    try {
+      const querySnapshot = await firebase
+        .db()
+        .collection('messages')
+        .where('ownerId', '==', ownerId)
+        .orderBy('createdAt', 'desc')
+        .get()
 
       if (querySnapshot.docs.length) {
         return resolve(querySnapshot.docs.map(message => message.data()))
@@ -62,7 +92,10 @@ export const getMessages = () =>
 
 export const createChannel = async (channel: ChannelDocument) => {
   try {
-    const ref = await firebase.db.collection('channels').add(channel)
+    const ref = await firebase
+      .db()
+      .collection('channels')
+      .add(channel)
     return ref
   } catch (error) {
     console.log('Error creating channel document:', error)
@@ -100,6 +133,7 @@ export const checkAvailabilityAndCreateChannel = (channel: ChannelDocument) =>
         name: channel.name,
         urlSuffix: urlToTry,
         ownerId: channel.ownerId,
+        createdAt: firebase.db.FieldValue.serverTimestamp(),
       })
 
       resolve(channelRef)
@@ -112,7 +146,8 @@ export const checkAvailabilityAndCreateChannel = (channel: ChannelDocument) =>
 export const getChannelByName = (name: string) =>
   new Promise(async (resolve, reject) => {
     try {
-      const querySnapshot = await firebase.db
+      const querySnapshot = await firebase
+        .db()
         .collection('channels')
         .where('name', '==', name)
         .get()
@@ -131,7 +166,8 @@ export const getChannelByName = (name: string) =>
 export const getChannelByUrlSuffix = (urlSuffix: string) =>
   new Promise(async (resolve, reject) => {
     try {
-      const querySnapshot = await firebase.db
+      const querySnapshot = await firebase
+        .db()
         .collection('channels')
         .where('urlSuffix', '==', urlSuffix)
         .get()

@@ -131,6 +131,7 @@ const Record: React.FC<RecordPageProps> = () => {
             isAudioProcessing: true,
             duration: audio.duration,
             ownerId: authUser.uid,
+            createdAt: firebase.db.FieldValue.serverTimestamp(),
           })
 
           setMessageShortId(newShortId)
