@@ -11,29 +11,18 @@ const Container = styled.div`
 `
 
 const Left = styled.div`
-  flex: 1;
-  flex-direction: row;
   align-items: center;
-`
-
-const Center = styled.div`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
 `
 
 const Right = styled.div`
   flex: 1;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 `
 
 const Space = styled.div`
   width: ${padding.s}px;
-`
-
-const ButtonContainer = styled.div`
-  align-self: center;
 `
 
 // TODO: fix mobile layout, add burger nav
@@ -44,33 +33,30 @@ const Nav = () => {
   return (
     <Container>
       <Left>
-        <ButtonContainer>
-          <Link to="/">
-            <ButtonStandard label="Home" />
-          </Link>
-        </ButtonContainer>
-        <Space />
-        <ButtonContainer>
-          <Link to="/record">
-            <ButtonStandard label="Record" />
-          </Link>
-        </ButtonContainer>
+        <Link to="/">
+          <ButtonStandard label="vbox" />
+        </Link>
       </Left>
-      <Center>
-        <h3>vbox</h3>
-      </Center>
       <Right>
-        <ButtonContainer style={{ alignSelf: 'flex-end' }}>
-          {user ? (
-            <Link to={`/${user.urlSuffix}`}>
-              <ButtonStandard label="Your channel" />
-            </Link>
-          ) : (
+        {user ? (
+          <Link to={`/${user.urlSuffix}`}>
+            <ButtonStandard label="You" />
+          </Link>
+        ) : (
+          <>
             <Link to="/signup">
-              <ButtonStandard label="Start your channel" />
+              <ButtonStandard label="Login" />
             </Link>
-          )}
-        </ButtonContainer>
+            <Space />
+            <Link to="/signup">
+              <ButtonStandard label="Signup" />
+            </Link>
+          </>
+        )}
+        <Space />
+        <Link to="/record">
+          <ButtonStandard label="Record a Message" />
+        </Link>
       </Right>
     </Container>
   )

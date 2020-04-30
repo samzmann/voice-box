@@ -23,6 +23,7 @@ const App: React.FC = () => {
           <Nav />
           <Router>
             <Home path="/" />
+            {/*<Signup path="/login" />*/}
             <Signup path="/signup" />
             <Record path="/record" />
             <Channel path="/:urlSuffix" />

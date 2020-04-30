@@ -11,9 +11,7 @@ const Container = styled.div`
   padding-bottom: ${padding.s}px;
   padding-left: ${padding.m}px;
   padding-right: ${padding.m}px;
-  border-style: solid;
-  border-width: 2px;
-  border-color: ${color.LightGrey};
+  border: 2px solid ${color.LightGrey};
   font-size: 16px;
 
   &:hover {
