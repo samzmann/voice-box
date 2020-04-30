@@ -44,7 +44,7 @@ const Nav = () => {
           </Link>
         ) : (
           <>
-            <Link to="/signup">
+            <Link to="/login">
               <ButtonStandard label="Login" />
             </Link>
             <Space />
