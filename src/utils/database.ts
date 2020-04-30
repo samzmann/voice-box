@@ -17,7 +17,8 @@ export type ChannelDocumentInput = {
   ownerId: string
 }
 
-export type ChannelDocument = {
+// export type ChannelDocument = {
+export interface ChannelDocument extends firebase.firestore.DocumentData {
   name: string
   urlSuffix: string
   ownerId: string
@@ -192,3 +193,18 @@ export const getChannelByUrlSuffix = (urlSuffix: string) =>
       reject(error)
     }
   })
+
+export const getChannelBy = async (
+  field: string | firebase.firestore.FieldPath,
+  value: string | number
+): Promise<any> => {
+  const querySnapshot = await firebase
+    .db()
+    .collection('channels')
+    .where(field, '==', value)
+    .get()
+
+  if (querySnapshot.docs.length) {
+    return querySnapshot.docs[0].data()
+  }
+}

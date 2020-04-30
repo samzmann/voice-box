@@ -20,7 +20,6 @@ const Message: React.FC<MessagePageProps> = ({ shortId }) => {
       try {
         if (shortId) {
           const msg = await getMessageByShortId(shortId)
-          console.log('message', msg)
           setMessage(msg)
           setLoading(false)
         }

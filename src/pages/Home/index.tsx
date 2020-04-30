@@ -18,7 +18,6 @@ const Home: React.FC<HomePageProps> = () => {
       isMounted && setLoading(true)
       try {
         const msgs = await getMessages()
-        console.log(msgs)
         isMounted && setMessages(msgs)
         isMounted && setLoading(false)
       } catch (error) {

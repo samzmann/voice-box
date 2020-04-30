@@ -12,9 +12,9 @@ import Channel from './pages/Channel'
 import { ChannelDocument } from './utils/database'
 
 const App: React.FC = () => {
-  const { authUser, authInitialized } = useAuth()
-
   const [user, setUser] = useState<ChannelDocument>(null)
+
+  const { authUser, authInitialized } = useAuth(setUser)
 
   return (
     <AuthContext.Provider value={{ authUser, authInitialized }}>
