@@ -11,6 +11,12 @@ export interface MessageDocument {
   createdAt: firebase.firestore.FieldValue
 }
 
+export type ChannelDocumentInput = {
+  name: string
+  urlSuffix: string
+  ownerId: string
+}
+
 export type ChannelDocument = {
   name: string
   urlSuffix: string
@@ -90,19 +96,24 @@ export const getLastMessages = (ownerId: string) =>
     }
   })
 
-export const createChannel = async (channel: ChannelDocument) => {
+export const createChannel = async (channel: ChannelDocumentInput) => {
   try {
     const ref = await firebase
       .db()
       .collection('channels')
-      .add(channel)
+      .add({
+        ...channel,
+        createdAt: firebase.db.FieldValue.serverTimestamp(),
+      })
     return ref
   } catch (error) {
     console.log('Error creating channel document:', error)
   }
 }
 
-export const checkAvailabilityAndCreateChannel = (channel: ChannelDocument) =>
+export const checkAvailabilityAndCreateChannel = (
+  channel: ChannelDocumentInput
+) =>
   new Promise(async (resolve, reject) => {
     try {
       const nameTaken = await getChannelByName(channel.name)
@@ -133,7 +144,6 @@ export const checkAvailabilityAndCreateChannel = (channel: ChannelDocument) =>
         name: channel.name,
         urlSuffix: urlToTry,
         ownerId: channel.ownerId,
-        createdAt: firebase.db.FieldValue.serverTimestamp(),
       })
 
       resolve(channelRef)
@@ -144,7 +154,7 @@ export const checkAvailabilityAndCreateChannel = (channel: ChannelDocument) =>
   })
 
 export const getChannelByName = (name: string) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<any>(async (resolve, reject) => {
     try {
       const querySnapshot = await firebase
         .db()

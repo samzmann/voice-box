@@ -33,18 +33,23 @@ export const useAuth = (): AuthContextType => {
   useEffect(() => {
     let isMounted = true
 
-    firebase.auth.onAuthStateChanged((firebaseAuthUser: User) => {
-      console.log('firebaseAuthUser', firebaseAuthUser)
-      isMounted && setAuthUser(firebaseAuthUser)
-      isMounted && setAuthInitialized(true)
+    const authListener = firebase.auth.onAuthStateChanged(
+      (firebaseAuthUser: User) => {
+        console.log('firebaseAuthUser', firebaseAuthUser)
+        isMounted && setAuthUser(firebaseAuthUser)
+        isMounted && setAuthInitialized(true)
 
-      if (!firebaseAuthUser) {
-        firebase.auth.signInAnonymously().catch(console.error)
+        if (!firebaseAuthUser) {
+          firebase.auth.signInAnonymously().catch(console.error)
+        }
       }
-    })
+    )
 
     return () => {
       isMounted = false
+
+      // call authListener to unsubscribe
+      authListener()
     }
   }, [])
 

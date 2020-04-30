@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from '@reach/router'
 import styled from 'styled-components'
 import { padding } from '../../constants/padding'
 import { ButtonStandard } from '../../elements/buttons'
+import { UserContext, UserContextType } from '../../context/userContext'
 
 const Container = styled.div`
   flex-direction: row;
@@ -38,6 +39,8 @@ const ButtonContainer = styled.div`
 // TODO: fix mobile layout, add burger nav
 
 const Nav = () => {
+  const { user } = useContext<UserContextType>(UserContext)
+
   return (
     <Container>
       <Left>
@@ -58,9 +61,15 @@ const Nav = () => {
       </Center>
       <Right>
         <ButtonContainer style={{ alignSelf: 'flex-end' }}>
-          <Link to="/signup">
-            <ButtonStandard label="Start your channel" />
-          </Link>
+          {user ? (
+            <Link to={`/${user.urlSuffix}`}>
+              <ButtonStandard label="Your channel" />
+            </Link>
+          ) : (
+            <Link to="/signup">
+              <ButtonStandard label="Start your channel" />
+            </Link>
+          )}
         </ButtonContainer>
       </Right>
     </Container>

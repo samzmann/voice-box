@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { ButtonStandard } from '../elements/buttons'
 import styled from 'styled-components'
 import { color } from '../constants/color'
 import { padding } from '../constants/padding'
-import { checkAvailabilityAndCreateChannel } from '../utils/database'
+import {
+  checkAvailabilityAndCreateChannel,
+  getChannelByName,
+} from '../utils/database'
 import Loading from './Loading'
 import { navigate } from '@reach/router'
 import firebase from '../firebase'
+import { UserContext, UserContextType } from '../context/userContext'
 
 const Form = styled.form`
   display: flex;
@@ -83,6 +87,8 @@ export const SignupForm: React.FC = () => {
   const [signupError, setSignupError] = useState(null)
   const [newUser, setNewUser] = useState(null)
 
+  const { setUser } = useContext<UserContextType>(UserContext)
+
   const { errors, handleChange, handleSubmit, touched, values } = useFormik({
     initialValues: {
       channelName: '',
@@ -130,8 +136,14 @@ export const SignupForm: React.FC = () => {
           name: values.channelName.trim(),
           urlSuffix,
           ownerId: user.uid,
-          createdAt: firebase.db.FieldValue.serverTimestamp(),
         })
+
+        // get channel from server, and save to context
+        const channelFromServer = await getChannelByName(
+          values.channelName.trim()
+        )
+
+        setUser(channelFromServer)
 
         resetForm()
         navigate(urlSuffix)
